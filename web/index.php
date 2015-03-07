@@ -9,6 +9,13 @@ use \OpenTok\OpenTok;
 use \werx\Config\Providers\ArrayProvider;
 use \werx\Config\Container;
 use \Predis\Response\ErrorInterface as RedisErrorInterface;
+
+/* ------------------------------------------------------------------------------------------------
+ * Controllers Initialization
+ * -----------------------------------------------------------------------------------------------*/
+require __DIR__.'/controllers/HomeController.php';
+$home_controller = new HomeController();
+
 /* ------------------------------------------------------------------------------------------------
  * Twig Template Engine Initialization
  * -----------------------------------------------------------------------------------------------*/
@@ -54,8 +61,8 @@ define('HELP_QUEUE_KEY', 'helpqueue');
  * -----------------------------------------------------------------------------------------------*/
 
 // Customer landing page
-$app->get('/', function () use ($app, $twig) {
-    echo $twig->render('home.html');
+$app->get('/', function () use ($app, $twig, $home_controller) {
+    echo $twig->render('home.html', array('controller' => $home_controller));
 });
 
 // Representative landing page
