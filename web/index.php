@@ -13,8 +13,9 @@ use \Predis\Response\ErrorInterface as RedisErrorInterface;
 /* ------------------------------------------------------------------------------------------------
  * Controllers Initialization
  * -----------------------------------------------------------------------------------------------*/
-require __DIR__.'/controllers/HomeController.php';
+require __DIR__.'/controllers/controllers_loader.php';
 $home_controller = new HomeController();
+$account_controller = new AccountController();
 
 /* ------------------------------------------------------------------------------------------------
  * Twig Template Engine Initialization
@@ -68,6 +69,10 @@ $app->get('/', function () use ($app, $twig, $home_controller) {
 // Representative landing page
 $app->get('/rep', function () use ($app) {
     $app->render('representative.php');
+});
+
+$app->get('/account', function () use ($twig, $account_controller) {
+    echo $twig->render('account.html', array('controller' => $account_controller));
 });
 
 // Customer requests service
