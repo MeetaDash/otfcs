@@ -9,6 +9,11 @@ use \OpenTok\OpenTok;
 use \werx\Config\Providers\ArrayProvider;
 use \werx\Config\Container;
 use \Predis\Response\ErrorInterface as RedisErrorInterface;
+/* ------------------------------------------------------------------------------------------------
+ * Twig Template Engine Initialization
+ * -----------------------------------------------------------------------------------------------*/
+$loader = new Twig_Loader_Filesystem('../templates');
+$twig = new Twig_Environment($loader /* ,array(twig config) */);
 
 /* ------------------------------------------------------------------------------------------------
  * Slim Application Initialization
@@ -166,8 +171,8 @@ $app->post('/help/queue', function () use ($app, $redis) {
 // *  `customerName`: The customer's name
 // *  `problemText`: The customer's problem description
 //
-// NOTE: This request allows anonymous access, but if user authentication is required then the 
-// identity of the request should be verified (often times with session cookies) before a valid 
+// NOTE: This request allows anonymous access, but if user authentication is required then the
+// identity of the request should be verified (often times with session cookies) before a valid
 // response is given.
 $app->delete('/help/queue', function () use ($app, $redis, $opentok, $config) {
 
@@ -200,8 +205,8 @@ $app->delete('/help/queue', function () use ($app, $redis, $opentok, $config) {
         );
 
         // Once the help session is dequeued, we also clean it out of the storage.
-        // If keeping the history of this help session is important, we could mark it as dequeued 
-        // instead. If we had authentication for the representative, then we could also mark the 
+        // If keeping the history of this help session is important, we could mark it as dequeued
+        // instead. If we had authentication for the representative, then we could also mark the
         // help session with the identity of the representative.
         $redisResponse = $redis->del($helpSessionKey);
         if (!handleRedisError($redisResponse, $app, 'Could not delete the help session after dequeuing.')) {
