@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ecb14224ef3260910ab730b71a0d29ce",
+    "hash": "1bb6bb45bfa03d550af78166787cf35d",
     "packages": [
         {
             "name": "guzzle/guzzle",
@@ -163,6 +163,52 @@
                 "schema"
             ],
             "time": "2014-08-25 02:48:14"
+        },
+        {
+            "name": "leafo/scssphp",
+            "version": "v0.0.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/leafo/scssphp.git",
+                "reference": "ff76df3e45af45e808f3fcd516a2cb5cbc77f45e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/leafo/scssphp/zipball/ff76df3e45af45e808f3fcd516a2cb5cbc77f45e",
+                "reference": "ff76df3e45af45e808f3fcd516a2cb5cbc77f45e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
+            },
+            "require-dev": {
+                "php": ">=5.3.0",
+                "phpunit/phpunit": "3.7.*"
+            },
+            "bin": [
+                "pscss"
+            ],
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "scss.inc.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Leaf Corcoran",
+                    "email": "leafot@gmail.com",
+                    "homepage": "http://leafo.net"
+                }
+            ],
+            "description": "scssphp is a compiler for SCSS written in PHP.",
+            "homepage": "http://leafo.net/scssphp/",
+            "time": "2014-07-07 01:51:39"
         },
         {
             "name": "opentok/opentok",
@@ -375,6 +421,59 @@
             "time": "2015-02-01 16:10:57"
         },
         {
+            "name": "twbs/bootstrap-sass",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twbs/bootstrap-sass.git",
+                "reference": "d35d4bd58708c3db82aaac7b50295ff37a2d1c83"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twbs/bootstrap-sass/zipball/d35d4bd58708c3db82aaac7b50295ff37a2d1c83",
+                "reference": "d35d4bd58708c3db82aaac7b50295ff37a2d1c83",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.3.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mark Otto"
+                },
+                {
+                    "name": "Thomas McDonald"
+                },
+                {
+                    "name": "Tristan Harward"
+                },
+                {
+                    "name": "Peter Gumeson"
+                },
+                {
+                    "name": "Gleb Mazovetskiy"
+                },
+                {
+                    "name": "Jacob Thornton"
+                }
+            ],
+            "description": "bootstrap-sass is a Sass-powered version of Bootstrap, ready to drop right into your Sass powered applications.",
+            "homepage": "http://github.com/twbs/bootstrap-sass",
+            "keywords": [
+                "bootstrap",
+                "css",
+                "sass"
+            ],
+            "time": "2015-02-21 11:23:21"
+        },
+        {
             "name": "twig/twig",
             "version": "v1.18.0",
             "source": {
@@ -521,7 +620,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "twbs/bootstrap-sass": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
