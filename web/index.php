@@ -54,8 +54,8 @@ define('HELP_QUEUE_KEY', 'helpqueue');
  * -----------------------------------------------------------------------------------------------*/
 
 // Customer landing page
-$app->get('/', function () use ($app) {
-    $app->render('customer.php');
+$app->get('/', function () use ($app, $twig) {
+    echo $twig->render('home.html');
 });
 
 // Representative landing page
