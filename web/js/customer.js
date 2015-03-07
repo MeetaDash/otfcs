@@ -19,70 +19,29 @@
   // Using a module pattern to encapsulate the functionality. The object returned at the end of this
   // function presents the API for using this module. It is a singleton and can be reused.
   var serviceRequest = (function() {
-    var $modal, $form, $fields, sessionDataCallback;
+    var $requestBtn, sessionDataCallback;
 
-    var init = function(modalSelector, callback) {
-      $modal = $(modalSelector);
-      $form = $modal.find('.request-form');
-      $fields = $form.find('input, textarea');
+    var init = function(btnRequestSelector, callback) {
       sessionDataCallback = callback;
+      $requestBtn = $(btnRequestSelector)
 
-      $form.submit(submit);
-      $modal.find('.request-submit').click(function() {
-        $form.submit();
+      $requestBtn.click(function() {
+        startRequest();
       });
-      $modal.on('hidden.bs.modal', modalHidden);
     };
 
-    var submit = function(event) {
-      var requestData = $fields.serialize();
-      event.preventDefault();
-
-      disableFields();
-
-      if (validateForm($form, validationRequirements) === false) {
-        enableFields();
-        return;
-      }
-
-      $.post('/help/session', requestData, 'json')
+    var startRequest = function(event) {
+      $.post('/help/session', { customer_name: 'Ian' }, 'json')
         .done(function(data) {
           sessionDataCallback({
             apiKey: data.apiKey,
             sessionId: data.sessionId,
             token: data.token
           });
-          $modal.modal('hide');
         })
         .fail(function() {
-          presentAlert('Request failed. Try again later.', 'danger', $form.parent(), false);
-        })
-        .always(function() {
-          enableFields();
+          //presentAlert('Request failed. Try again later.', 'danger', $form.parent(), false);
         });
-    };
-
-    var modalHidden = function() {
-      $form[0].reset();
-    };
-
-    var validationRequirements = {
-      '.customer-name': {
-        maxLength: 50,
-        required: true
-      },
-      '.problem-text': {
-        maxLength: 200,
-        required: true
-      }
-    };
-
-    var disableFields = function() {
-      $fields.prop('disabled', true);
-    };
-
-    var enableFields = function() {
-      $fields.prop('disabled', false);
     };
 
     return {
@@ -270,9 +229,9 @@
   // Hooks up the button on the page to interacting with the Service Request as well as initializing
   // and tearing down a Service Panel instance
   $(doc).ready(function() {
-    $serviceRequestButton = $('.service-request-btn');
+    $serviceRequestButton = $('.chat-button');
 
-    serviceRequest.init('#service-request-modal', function(serviceSessionData) {
+    serviceRequest.init('.chat-button', function(serviceSessionData) {
       // Initialize a Service Panel instance
       servicePanel = new ServicePanel('#service-panel', serviceSessionData);
 
@@ -292,11 +251,11 @@
   // Page level helper methods
 
   var disableServiceRequest = function() {
-    $serviceRequestButton.prop('disabled', true);
+    $serviceRequestButton.fadeOut();
   };
 
   var enableServiceRequest = function() {
-    $serviceRequestButton.prop('disabled', false);
+    $serviceRequestButton.fadeIn();
   };
 
 
