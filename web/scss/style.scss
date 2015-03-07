@@ -61,6 +61,8 @@ $container-min-width: 1080px;
   width: 1080px;
 }
 
+@import "../bower_components/bootstrap-sass/lib/bootstrap";
+
 $dark-blue: #D8DEE4;
 $alert: #B9010F;
 @import "home";
@@ -133,6 +135,7 @@ $alert: #B9010F;
 .col-lg-11,
 .col-lg-12 {
   // Inner gutter via padding
+  float: left;
   padding-left:  15px;
   padding-right: 15px;
 }
