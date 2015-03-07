@@ -1,3 +1,4 @@
 /vendor/
 /config/development/*.php
 /web/bower_components/
+/web/scss/scss_cache
