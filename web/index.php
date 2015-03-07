@@ -25,11 +25,6 @@ $twig = new Twig_Environment($loader /* ,array(twig config) */);
 $template = $twig->loadTemplate('layout.html');
 
 /* ------------------------------------------------------------------------------------------------
- * Register Twig Helper methods
- * -----------------------------------------------------------------------------------------------*/
-
-
-/* ------------------------------------------------------------------------------------------------
  * Slim Application Initialization
  * -----------------------------------------------------------------------------------------------*/
 $app = new Slim(array(
@@ -76,6 +71,7 @@ $app->get('/rep', function () use ($app) {
     $app->render('representative.php');
 });
 
+// Other routes
 $app->get('/account', function () use ($twig, $account_controller) {
     echo $twig->render('account.html', array('controller' => $account_controller));
 });
@@ -94,18 +90,14 @@ $app->get('/account', function () use ($twig, $account_controller) {
 $app->post('/help/session', function () use ($app, $opentok, $redis, $config) {
 
     $customerName = $app->request->params('customer_name');
-    $problemText = $app->request->params('problem_text');
 
     // Validation
     $errorMessage;
-    if (empty($customerName) || empty($problemText)) {
-        $errorMessage = 'The fields customer_name and problem_text are required.';
+    if (empty($customerName)) {
+        $errorMessage = 'The field customer_name is required.';
     }
     if (strlen($customerName) > 50) {
         $errorMessage = 'The field customer_name is too long';
-    }
-    if (strlen($problemText) > 200) {
-        $errorMessage = 'The field problem_text is too long';
     }
     if (!empty($errorMessage)) {
         $app->response->setStatus(400);
@@ -123,7 +115,7 @@ $app->post('/help/session', function () use ($app, $opentok, $redis, $config) {
     // Save the help session details
     $redisResponse = $redis->hmset(PREFIX_HELP_SESSION_KEY.$session->getSessionId(),
         'customerName', $customerName,
-        'problemText', $problemText,
+        //'problemText', $problemText,
         'sessionId', $session->getSessionId()
     );
     // Handle errors
@@ -131,8 +123,6 @@ $app->post('/help/session', function () use ($app, $opentok, $redis, $config) {
         return;
     }
 
-    $app->response->headers->set('Content-Type', 'application/json');
-    $app->response->setBody(json_encode($responseData));
 });
 
 // B) Enqueue in service queue
@@ -218,8 +208,7 @@ $app->delete('/help/queue', function () use ($app, $redis, $opentok, $config) {
             'apiKey' => $config->opentok('key'),
             'sessionId' => $helpSessionData['sessionId'],
             'token' => $opentok->generateToken($helpSessionData['sessionId']),
-            'customerName' => $helpSessionData['customerName'],
-            'problemText' => $helpSessionData['problemText']
+            'customerName' => $helpSessionData['customerName']
         );
 
         // Once the help session is dequeued, we also clean it out of the storage.
