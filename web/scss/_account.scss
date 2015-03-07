@@ -1,0 +1,161 @@
+.account-container {
+  padding-top: 25px;
+  padding-bottom: 15px;
+
+
+  .basic-info {
+    padding-bottom: 50px;
+
+    font-family: $book-font;
+    font-size: 16px;
+
+    // div {
+    //   font-size: 11pt;
+    // }
+
+    a{
+      color: #000000;
+    }
+  }
+
+  .disable-investment-rec-title {
+    //color: #d8dee4;
+    opacity: .3;
+  }
+
+  .investment-line {
+    .line {
+      margin-right: 0px;
+      margin-left: 0px;
+    }
+  }
+
+  .shared-content {
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-bottom: 10px;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  // Account page date picker haaaacks
+  .table-condensed {
+    font-size: 14px;
+    //margin-left: 2px;
+    //margin-right: 10px;
+  }
+
+  .date-picker .datepicker table tr td.active.active.disabled, .date-picker .datepicker table tr td.active.active:hover.disabled {
+    color: white;
+  }
+
+  .date-picker .datepicker td.meeting {
+    color: white;
+  }
+
+  .table-condensed > thead > tr > th,
+  .table-condensed > thead > tr > td,
+  .table-condensed > tbody > tr > th,
+  .table-condensed > tbody > tr > td,
+  .table-condensed > tfoot > tr > th,
+  .table-condensed > tfoot > tr > td {
+  //  width: 40px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .dow {
+    display: none;
+  }
+}
+
+
+.highlight {
+  color: $alert;
+}
+.credit {
+  @extend .change-green;
+}
+.debt {
+  color: $alert;
+}
+
+
+.right-container {
+  padding-right: 0px !important;
+}
+
+.empty-space {
+  height: 315px;
+}
+
+.chat-button {
+  cursor: pointer;
+  border: 1px solid white;
+  box-shadow: 1px 1px 1px rgba(0,0,0,0.25);
+  background-color: $alert;
+  color: white;
+  margin-top: 25px;
+  margin-bottom: 20px;
+}
+.chat-table {
+  height: 108px;
+  display: table;
+}
+.chat-table-cell {
+  display: table-cell;
+  height: 100%;
+  vertical-align: middle;
+}
+
+@mixin communication-title {
+    font-family: $heavy-font;
+    font-size: 14px;
+    color: #315165;
+}
+
+.communication-center {
+  .communication-subtitle {
+    padding-top: 5px;
+    padding-bottom: 10px;
+    @include communication-title;
+  }
+
+  .meeting {
+    font-size: 13px;
+    font-family: $book-font;
+  }
+
+  .meeting.highlight {
+    font-family: $medium-font;
+  }
+}
+
+.sessions {
+  .sessions-title {
+    padding-top: 25px;
+    font-family: $heavy-font;
+    font-size: 14px;
+    color: #315165;
+  }
+
+  .session {
+    padding-top: 5px;
+    padding-bottom: 10px;
+
+    font-size: 16px;
+    font-family: $book-font;
+
+    .image-holder {
+      cursor: pointer;
+      line-height: 65px;
+      &.pending {
+        opacity: .5;
+      }
+    }
+  }
+}

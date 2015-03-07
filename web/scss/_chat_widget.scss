@@ -1,0 +1,21 @@
+.chat-widget {
+  display: inline-block;
+  box-shadow: 5px 5px 5px rgba(0,0,0,0.25);
+  background: white;
+  z-index: 9999;
+  float: right;
+  margin-bottom: 10px;
+}
+.chat-widget #OTCS[data-state="deviceAllow"] {
+  height: 170px;
+}
+.col-xs-10.chat-widget-container {
+  min-height: 265px;
+  padding-left: 0;
+  padding-right: 0;
+}
+.chat-widget.stick {
+  position: fixed;
+  top: 1%;
+  right: 2%;
+}

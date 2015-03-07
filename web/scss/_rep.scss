@@ -1,0 +1,289 @@
+.rep-container {
+  padding-bottom: 80px;
+
+  h5 {
+    padding-top: 0px;
+    padding-bottom: 5px;
+
+    margin-bottom: 10px;
+
+    // For the black arrow
+    img {
+      margin-top: 8px;
+    }
+  }
+
+  h6 {
+    margin-top: 0px
+  }
+
+
+  .input-box {
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    // Constant variables
+    $placeholder-padding-left: 5px;
+    $placeholder-text-size: 10pt;
+    $placeholder-padding-top: 0px;
+
+    ::-webkit-input-placeholder {
+       //color: red;
+
+       padding-left: $placeholder-padding-left;
+       padding-top: $placeholder-padding-top;
+       font-size: $placeholder-text-size;
+    }
+
+    :-moz-placeholder { /* Firefox 18- */
+       //color: red;
+
+       padding-left: $placeholder-padding-left;
+       padding-top: $placeholder-padding-top;
+       font-size: $placeholder-text-size;
+    }
+
+    ::-moz-placeholder {  /* Firefox 19+ */
+       //color: red;
+       padding-left: $placeholder-padding-left;
+       padding-top: $placeholder-padding-top;
+       font-size: $placeholder-text-size;
+    }
+
+    :-ms-input-placeholder {
+       //color: red;
+       padding-left: $placeholder-padding-left;
+       padding-top: $placeholder-padding-top;
+       font-size: $placeholder-text-size;
+    }
+
+    input {
+      width: 100%;
+      height: 22px;
+
+      //position: static;
+      border: 0;
+      //padding: 0;
+      margin: 0;
+      -webkit-border-radius: 0;
+         -moz-border-radius: 0;
+              border-radius: 0;
+      -webkit-box-shadow: none;
+         -moz-box-shadow: none;
+              box-shadow: none;
+
+      // Same as placeholder text size
+      font-size: $placeholder-text-size;
+      padding-left: $placeholder-padding-left;
+
+    }
+  }
+
+  .schedule-button {
+    //padding-top: 10px;
+    padding-bottom: 10px;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .left-column {
+    // Doesn't need padding top like other columns
+
+    .meetings-title {
+      font-family: $heavy-font;
+     // font-size: 15px;
+      color: #315165;
+    }
+
+    .meeting {
+      font-size: 12px;
+    }
+
+    .calendar {
+      font-size: 14px;
+
+      .table-condensed > thead > tr > th,
+      .table-condensed > thead > tr > td,
+      .table-condensed > tbody > tr > th,
+      .table-condensed > tbody > tr > td,
+      .table-condensed > tfoot > tr > th,
+      .table-condensed > tfoot > tr > td {
+      //  width: 40px;
+        padding-top: 3px;
+        padding-bottom: 3px;
+        padding-left: 8px;
+        padding-right: 9px;
+      }
+
+      td.meeting {
+        background-color: inherit;
+        border-bottom: 1px solid red;
+      }
+
+      .dow {
+        display: none;
+      }
+    }
+
+    .previous-sessions {
+      padding-bottom: 10px;
+      .archives {
+        overflow: auto;
+
+        font-family: $book-font;
+
+        .archive {
+          margin-bottom: 10px;
+          margin-left: 0px;
+          margin-right: 0px;
+
+          .archive-image {
+            line-height: 65px;
+            cursor: pointer;
+          }
+
+          .archive-text {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            font-size: 10pt;
+          }
+        }
+      }
+    }
+
+  }
+
+  .center-column {
+    padding-top: 25px;
+
+
+    .portfolio-review-image {
+      padding-top: 10px;
+      padding-bottom: 10px;
+
+      img {
+        width: 100%;
+      }
+    }
+
+
+    .portfolio-review-line {
+      margin-bottom: 0px;
+    }
+
+  }
+
+  .right-column {
+    padding-top: 25px;
+
+    .account-overview-title {
+      margin-bottom: -8px;
+    }
+
+    .account-overview-label {
+      font-size: 14px;
+      //margin-right: -5px;
+    }
+
+    .account-overview-cash {
+      font-family: $book-font;
+      font-size: 14px;
+      color: green;
+    }
+
+    .account-overview-tabs {
+      padding-top: 10px;
+    }
+
+    .nav-tabs {
+      //font-size: 20px;
+
+      li {
+        padding-top: 0px;
+
+        a {
+          padding-left: 10px;
+        }
+      }
+
+      .tab-label-cash {
+        width: 18%;
+      }
+      .tab-label-equity {
+        width: 23%;
+      }
+      .tab-label-fixed {
+        width: 23%;
+      }
+
+      .tab-label-retirement {
+        width: 36%;
+      }
+    }
+
+    .tab-pane {
+      font-size: 10pt;
+
+      .transaction-entry {
+        padding: 10px;
+
+        font-size: 14px;
+
+        .row {
+          padding-top: 8px;
+          padding-bottom: 0px;
+        }
+
+        // .transaction-change {
+        //   padding-left: 0px;
+        // }
+
+      }
+
+      div.row {
+        padding-bottom: 0px;
+        padding-top: 5px;
+      }
+    }
+
+    small.selected {
+      text-decoration: underline;
+    }
+
+    .rec-funds {
+      .line-holder {
+        margin-bottom: -15px;
+      }
+      .funds-image {
+        margin-bottom: -15px;
+        margin-top: -25px;
+      }
+
+      .funds-share-button {
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+
+      .customer-viewing {
+        padding-bottom: 15px;
+
+        .customer-viewing-text {
+          font-size: 12px;
+          margin-left: 0px;
+          padding-left: 0px;
+        }
+      }
+
+    }
+
+  }
+}
+
+ul.agenda {
+  li {
+    font-size: 14px;
+    list-style: disc;
+  }
+}
