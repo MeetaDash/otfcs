@@ -6,6 +6,9 @@
     <div class="demo-link pull-right">
       <ul>
         <li class="about"><a href="/about">ABOUT THIS DEMO</a></li>
+        {% if logout %}
+        <li class="logout"><a href="/">Log Out <img src="images/red-arrow-right.png"></a></li>
+        {% endif %}
       </ul>
     </div>
   </div>

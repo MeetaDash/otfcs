@@ -10,7 +10,7 @@ class HomeController
     // create array with two users
     function __construct() {
         $nestor = new User(
-            'Nestor', 'Bermudez', 'nestor.bermudez@agilityfeat.com', 'password'
+            'Ian', 'Smith', 'ian@company.com', 'password'
         );
         $arin = new User(
             'Arin', 'Sime', 'arin@agilityfeat.com', 'agilityfeat'
