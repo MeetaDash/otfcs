@@ -123,6 +123,8 @@ $app->post('/help/session', function () use ($app, $opentok, $redis, $config) {
         return;
     }
 
+    $app->response->headers->set('Content-Type', 'application/json');
+    $app->response->setBody(json_encode($responseData));
 });
 
 // B) Enqueue in service queue
