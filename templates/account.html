@@ -1,4 +1,13 @@
 {% extends "layout.html" %}
+
+{% block page_css %}
+<link rel="stylesheet" href="/css/customer.css">
+{% endblock %}
+
+{% block page_js %}
+<script src="/js/customer.js"></script>
+{% endblock %}
+
 {% block content %}
 <div class="grey-container full-size">
   {% include "components/navbar.html" with { 'logout': true } %}
@@ -266,5 +275,7 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+{% include "components/footer.html" %}
 
 {% endblock %}
