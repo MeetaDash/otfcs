@@ -1,0 +1,17 @@
+<div class="row text-center login-input-row">
+  <div class="col-xs-10">
+    <div class="row">
+      <div id="emailInputHolder" class="col-xs-6" data-placement="bottom" data-content="Email Required" data-trigger="manual">
+        <input type="email" name="email" value="{{ user.email }}">
+      </div>
+      <div id="passwordInputHolder" class="col-xs-6" data-placement="bottom" data-content="Password Required" data-trigger="manual">
+        <input class="password-input" type="password" name="password" value="{{ user.password }}" placeholder="Your password">
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-2 login-button">
+    <div id="loginButtonHolder" data-placement="top" data-content="Wrong email or password" data-title="Error" data-trigger="manual">
+      <a href="{{action}}">Login <img src="/images/white-arrow.png" /></a>
+    </div>
+  </div>
+</div>
