@@ -28,6 +28,11 @@ class HomeController
         return $this->users[0];
     }
 
+    public function lastUser()
+    {
+        return end($this->users);
+    }
+
     public function stocks() {
         return $this->stocks;
     }
