@@ -77,6 +77,10 @@ $app->get('/account', function () use ($twig, $account_controller) {
     echo $twig->render('account.html', $context);
 });
 
+$app->get('/wm', function () use ($twig, $wealth_manager_controller) {
+    echo $twig->render('wealth_manager.html');
+});
+
 // Customer requests service
 //
 // A) Create a help session
