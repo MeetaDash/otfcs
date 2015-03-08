@@ -1,86 +1,221 @@
 {% extends "layout.html" %}
 
-{% block page_css %}
-<link rel="stylesheet" href="/css/representative.css">
-{% endblock %}
-
-{% block page_js %}
-<script src="/js/representative.js"></script>
-{% endblock %}
-
 {% block content %}
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">OpenTok Service Kit</a>
+<div class="hero-container">
+  {% include "components/navbar.html" %}
+  <div class="login-table">
+    <div class="login-tablecell">
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-6 black-overlay">
+            <div class="row">
+              <div class="col-xs-12 login-header">
+                <h1>Take charge of your investment strategy</h1>
+                <h3>Log in to manage your portfolio:</h3>
+              </div>
+            </div>
+            {% include "components/login-form.html" with { 'action': '/wm/dashboard', 'user': controller.lastUser() } %}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</nav>
-
-<div class="container" id="service-provider">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <button type="button" class="btn btn-primary get-customer">Get Customer</button>
-                    <button type="button" class="btn btn-danger end-call">End Call</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-body video-holder">
-                    <div class="subscriber" />
-                    <div class="publisher" />
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <dl class="dl-horizontal customer-info">
-                        <dt>Customer Name</dt>
-                        <dd class="customer-name"></dd>
-                        <dt>Problem Description</dt>
-                        <dd class="problem-text"></dd>
-                    </dl>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
-
-<!-- Service Request Modal -->
-<div class="modal fade" id="service-provider-login-modal" tabindex="-1" role="dialog" aria-labelledby="service-provider-login-modal-label" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="service-provider-login-modal-label">Representative Login</h4>
+<div class="non-responsive">
+  <div class="container">
+    <div class="row top">
+      <div class="col-xs-4">
+        <h2>Financial solutions</h2>
+        <p>Resources to help you meet your goals.</p>
+      </div>
+      <div class="col-xs-5">
+        <h2>Investment tools</h2>
+        <p>Featured insights and market tools</p>
+      </div>
+      <div class="col-xs-4 stock-prices hide">
+        {% for stock in controller.stocks() %}
+          <div class="row">
+            <div class="col-xs-4">
+              {{ stock.title }}
             </div>
-            <div class="modal-body">
-                <form role="form" class="login-form">
-                    <div class="form-group">
-                        <label for="representative-name" class="control-label">Your Name:</label>
-                        <input type="text" class="form-control representative-name" name="representative_name" required="required">
-                    </div>
-                </form>
-                <div class="alert alert-warning access-info" role="alert">Please <strong>allow access to your camera and mic</strong> before logging in.</div>
-                <div class="alert alert-success access-success" role="alert">Your camera and mic are accessible.</div>
-                <div class="alert alert-danger access-error" role="alert">Your camera and mic were denied. Please revert the choice and retry.</div>
+            <div class="col-xs-3">
+              {{ stock.price }}
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary login-submit" disabled>Login</button>
+            <div class="col-xs-3 credit">
+              {{ stock.change }}
             </div>
+            <div class="col-xs-1 credit text-right">
+              {{ stock.percentage }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      {% for stock in controller.stocks() %}
+      <div class="col-xs-1 stock-prices">
+        <div class="row stock-title">
+          {{ stock.title }}
+        </div>
+        <div class="row stock-price">
+          {{ stock.price }}
+        </div>
+        <div class="row stock-change">
+          {{ stock.change }}
+        </div>
+        <div class="row stock-percent-change">
+          {{ stock.percentage }}
+        </div>
+      </div>
+      {% endfor %}
     </div>
+  </div>
+</div>
+<div class="hp-middle">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-6">
+        <h2>We're here to help you plan <br>for the future.</h2>
+        <p>
+         When you choose an Atlantic National Bank Advisor, you're entering into a unique long-term relationship.
+         One where your advisor takes the time to develop a thorough understanding of who you are, how you think
+         and what matters most to you. It's a relationship that combines financial experience with intimate knowledge
+         of your priorities to plan, protect and help fulfill your vision of the future.
+       </p>
+      </div>
+      <div class="col-xs-6">
+        <img class="img-middle pull-right" src="/images/hp-middle.jpg">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="non-responsive">
+  <div class="container">
+    <div class="row bottom">
+      <div class="col-xs-4">
+        <h2>Estate planning</h2>
+        <p>
+          We can help you preserve your assets, reduce taxes paid by your heirs and help unlock opportunities for future generations.
+        </p>
+      </div>
+      <div class="col-xs-4">
+        <h2>International investing</h2>
+        <p>
+          We can help you diversify your investments by leveraging global investment research from our respected analysts.
+        </p>
+      </div>
+      <div class="col-xs-4">
+        <h2>Retirement planning</h2>
+        <p>
+          We can guide you along a path to - and through - retirement. We provide guidance, tools, and services to help you prepare for retirement on your terms.
+        </p>
+      </div>
+    </div>
+
+    <h2 class="stock-headline">U.S. Stocks</h2>
+
+    <div class="row">
+      <div class="col-xs-6 gainers">
+        <div class="row">
+          <div class="col-xs-11">
+            <div class="row">
+              <div class="col-xs-7">
+                <p><strong>Gainers</strong></p>
+              </div>
+              <div class="col-xs-1">
+                <p class="price"><strong>Price</strong></p>
+              </div>
+              <div class="col-xs-4">
+                <p class="pull-right"><strong>% Change</strong></p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="line stock-line"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-7 stocks-list">
+                <ul>
+                  <li><strong>USU</strong> USEC Inc.</li>
+                  <li><strong>ZOOM</strong> ZOOM Technologies,...</li>
+                  <li><strong>ARCW</strong> ARC Group Worldwid...</li>
+                  <li><strong>QTWW</strong> Quantum Fuel Syste...</li>
+                  <li><strong>DQ</strong> Daqo New Energy Corp.</li>
+                </ul>
+              </div>
+              <div class="col-xs-1 stock-price stocks-list">
+                <ul>
+                  <li>10.01</li>
+                  <li>4.39</li>
+                  <li>33.60</li>
+                  <li>6.75</li>
+                  <li>46.55</li>
+                </ul>
+              </div>
+              <div class="col-xs-4 stocks-list change">
+                <ul class="change-green pull-right">
+                  <li>55.68%  <img src="/images/green-arrow.png" /></li>
+                  <li>54.58%  <img src="/images/green-arrow.png" /></li>
+                  <li>43.04%  <img src="/images/green-arrow.png" /></li>
+                  <li>35.27%  <img src="/images/green-arrow.png" /></li>
+                  <li>34.46%  <img src="/images/green-arrow.png" /></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-6 losers">
+        <div class="row">
+          <div class="col-xs-11 stock-table">
+            <div class="row">
+              <div class="col-xs-7">
+                <p><strong>Losers</strong></p>
+              </div>
+              <div class="col-xs-1">
+                <p class="price"><strong>Price</strong></p>
+              </div>
+              <div class="col-xs-4">
+                <p class="pull-right"><strong>% Change</strong></p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="line stock-line"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-7 stocks-list">
+                <ul>
+                  <li><strong>MTL</strong> Mechel OAO</li>
+                  <li><strong>PERY</strong> Perry Ellis Inte...</li>
+                  <li><strong>CHGG</strong> Chegg, Inc.</li>
+                  <li><strong>SARA</strong> Saratoga Resourc...</li>
+                  <li><strong>YRCW</strong> YRC Worldwide...</li>
+                </ul>
+              </div>
+              <div class="col-xs-1 stock-price stocks-list">
+                <ul>
+                  <li>2.20</li>
+                  <li>15.00</li>
+                  <li>9.68</li>
+                  <li>1.83</li>
+                  <li>7.72</li>
+                </ul>
+              </div>
+              <div class="col-xs-4 stocks-list change">
+                <ul class="change-red pull-right">
+                  <li>23.34%  <img src="/images/red-arrow.png" /></li>
+                  <li>22.96%  <img src="/images/red-arrow.png" /></li>
+                  <li>22.56%  <img src="/images/red-arrow.png" /></li>
+                  <li>21.12%  <img src="/images/red-arrow.png" /></li>
+                  <li>20.68%  <img src="/images/red-arrow.png" /></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
