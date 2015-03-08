@@ -9,6 +9,7 @@
 
   // State
   var servicePanel,
+      customerName,
       $serviceRequestButton;
 
   // Service Request
@@ -31,7 +32,7 @@
     };
 
     var startRequest = function(event) {
-      $.post('/help/session', { customer_name: 'Ian' }, 'json')
+      $.post('/help/session', { customer_name: customerName }, 'json')
         .done(function(data) {
           sessionDataCallback({
             apiKey: data.apiKey,
@@ -65,9 +66,13 @@
     this.$panel = $(selector);
     this.$publisher = this.$panel.find('.publisher');
     this.$subscriber = this.$panel.find('.subscriber');
+    this.$textChat = this.$panel.find('.text-chat');
     this.$waitingHardwareAccess = this.$panel.find('.waiting .hardware-access');
     this.$waitingRepresentative = this.$panel.find('.waiting .representative');
     this.$closeButton = this.$panel.find('.close-button');
+    this.$messageText = this.$textChat.find('.message-text');
+    this.$sendButton = this.$textChat.find('.btn-send');
+    this.$messageLog = this.$textChat.find('.history');
 
     // Do this asynchronously so that the 'open' event happens on a separate turn of the event loop
     // than the instantiation.
@@ -82,7 +87,8 @@
     this.session.on('sessionConnected', this._sessionConnected, this)
                 .on('sessionDisconnected', this._sessionDisconnected, this)
                 .on('streamCreated', this._streamCreated, this)
-                .on('streamDestroyed', this._streamDestroyed, this);
+                .on('streamDestroyed', this._streamDestroyed, this)
+                .on('signal:chat', this._messageReceived, this);
 
     this.publisher = OT.initPublisher(this.$publisher[0], this._videoProperties);
     this.publisher.on('accessAllowed', this._publisherAllowed, this)
@@ -92,6 +98,10 @@
     this.$panel.show();
     this.$publisher.children().not(':last').remove();
     this.$waitingHardwareAccess.show();
+
+    this.$sendButton.on('click', this.sendMessage.bind(this));
+    this.$messageText.on('keyup', this.sendMessageOnEnter.bind(this));
+    this.preparePanel();
 
     this.emit('open');
   };
@@ -104,10 +114,45 @@
     }
   };
 
+  ServicePanel.prototype.preparePanel = function() {
+    this.$panel.addClass('on-queue');
+  };
+
+  ServicePanel.prototype.sendMessage = function() {
+    var self = this;
+    this.session.signal({
+      type: 'chat',
+      data: {
+        from: customerName,
+        text: self.$messageText.val()
+      }
+    }, function(error) {
+      if (!error) { self.$messageText.val(''); }
+    });
+  };
+
+  ServicePanel.prototype.sendMessageOnEnter = function(e) {
+    if (e.keyCode == 13) this.sendMessage();
+  };
+
+  ServicePanel.prototype._messageReceived = function(event) {
+    var mine = event.from.connectionId === this.session.connection.connectionId;
+    this._renderNewMessage(event.data, mine);
+    this.$messageLog.scrollTop(this.$messageLog[0].scrollHeight);
+  };
+
+  /* This needs a better way to be done. Handlebars maybe? */
+  ServicePanel.prototype._renderNewMessage = function(data, mine) {
+    var template = '<div class="message"><div class="from">' + data.from + '</div><div class="msg-body">' + data.text + '</div></div>';
+    this.$messageLog.append(template);
+  };
+
   ServicePanel.prototype._cleanUp = function() {
     this.$waitingHardwareAccess.hide();
     this.$waitingRepresentative.hide();
-    this.$closeButton.off().text('Cancel');
+    this.$textChat.hide();
+    this.$messageLog.html('');
+    this.$closeButton.off().text('Cancel call');
 
     this.session.off();
     this.publisher.off();
@@ -197,8 +242,11 @@
           console.log('An internal error occurred. Try subscribing to this stream again.');
         }
       });
-      this.$closeButton.text('End');
+      this.$closeButton.text('End call');
       this.$waitingRepresentative.hide();
+      this.$panel.removeClass('on-queue');
+      this.$publisher.show();
+      this.$textChat.show();
 
       // Invalidate queueId because if the representative arrived, that means customer has been
       // dequeued
@@ -231,6 +279,7 @@
   // and tearing down a Service Panel instance
   $(doc).ready(function() {
     $serviceRequestButton = $('.chat-button');
+    customerName = 'Ian';
 
     serviceRequest.init('.chat-button', function(serviceSessionData) {
       // Initialize a Service Panel instance
