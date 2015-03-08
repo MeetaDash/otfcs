@@ -63,7 +63,12 @@ define('HELP_QUEUE_KEY', 'helpqueue');
 
 // Customer landing page
 $app->get('/', function () use ($app, $twig, $home_controller) {
-    echo $twig->render('home.html', array('controller' => $home_controller));
+    $context = array(
+        'controller' => $home_controller,
+        'user' => $home_controller->firstUser(),
+        'action' => '/account'
+    );
+    echo $twig->render('home.html', $context);
 });
 
 // Representative landing page
@@ -78,7 +83,12 @@ $app->get('/account', function () use ($twig, $account_controller) {
 });
 
 $app->get('/wm', function () use ($twig, $home_controller) {
-    echo $twig->render('wealth_manager.html', array('controller' => $home_controller));
+    $context = array(
+        'controller' => $home_controller,
+        'user' => $home_controller->lastUser(),
+        'action' => '/wm/dashboard'
+    );
+    echo $twig->render('home.html', $context);
 });
 
 // Customer requests service

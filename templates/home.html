@@ -13,7 +13,7 @@
                   <h3>Log in to manage your portfolio:</h3>
                 </div>
               </div>
-              {% include "components/login-form.html" with { 'action': '/account', 'user': controller.firstUser() } %}
+              {% include "components/login-form.html" with { 'action': action, 'user': user } %}
             </div>
           </div>
         </div>
