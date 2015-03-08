@@ -13,24 +13,7 @@
                   <h3>Log in to manage your portfolio:</h3>
                 </div>
               </div>
-              <div class="row text-center login-input-row">
-                {% set user = controller.firstUser() %}
-                <div class="col-xs-10">
-                  <div class="row">
-                    <div id="emailInputHolder" class="col-xs-6" data-placement="bottom" data-content="Email Required" data-trigger="manual">
-                      <input type="email" name="email" value="{{ user.email }}">
-                    </div>
-                    <div id="passwordInputHolder" class="col-xs-6" data-placement="bottom" data-content="Password Required" data-trigger="manual">
-                      <input class="password-input" type="password" name="password" value="{{ user.password }}" placeholder="Your password">
-                    </div>
-                  </div>
-                </div>
-                <div class="col-xs-2 login-button">
-                  <div id="loginButtonHolder" data-placement="top" data-content="Wrong email or password" data-title="Error" data-trigger="manual">
-                    <a href="/account">Login <img src="/images/white-arrow.png" /></a>
-                  </div>
-                </div>
-              </div>
+              {% include "components/login-form.html" with { 'action': '/account', 'user': controller.firstUser() } %}
             </div>
           </div>
         </div>
@@ -65,7 +48,7 @@
               </div>
             </div>
           {% endfor %}
-        </div>        
+        </div>
         {% for stock in controller.stocks() %}
         <div class="col-xs-1 stock-prices">
           <div class="row stock-title">
