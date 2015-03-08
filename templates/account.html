@@ -18,10 +18,32 @@
         <div class="row info-container">
           <div class="col-xs-12">
             <div class="row">
+              {% if shared_content %}
+              <div class="sharedContentToggler">
+                <div class="col-xs-11">
+                  <h3>Investment Recommendations</h3>
+                </div>
+                <div class="col-xs-1">
+                  <h2 class="sc-plus">+</h2>
+                  <h2 class="sc-minus">-</h2>
+                </div>
+              </div>
+              {% else %}
+              <div class="col-xs-12">
+                <h3 class="disable-investment-rec-title">Investment Recommendations</h3>
+              </div>
+              {% endif %}
             </div>
             <div id="sharedContent" class="collapse in">
+              {% for content in shared_content %}
+              <div class="row shared-content">
+                <div class="col-xs-12 white-container">
+                  <h4>{{ content.title }}</h4>
+                  <img src="{{ content.url }}"/>
+                </div>
+              </div>
+              {% endfor %}
             </div>
-
           </div>
         </div>
         <div class="row info-container">
@@ -40,6 +62,10 @@
               </div>
 
               <div class="col-xs-2 col-xs-offset-1 numbers">
+                <h5>${{total_cash}}</h5>
+                <h5>${{total_equity}}</h5>
+                <h5>${{total_fixed}}</h5>
+                <h5>${{total_retirement}}</h5>
               </div>
             </div>
             <div class="row">
@@ -53,6 +79,9 @@
                 <div class="tab-content transactions">
                   <div class="tab-pane active" id="cash">
                     <div class="transaction-entry">
+                      {% for trans in cash_transactions %}
+                        {% include "components/account-transaction.html" with { 'transaction': trans, 'index': loop.index } %}
+                      {% endfor %}
                     </div>
                   </div>
                   <div class="tab-pane" id="equity">
@@ -186,6 +215,8 @@
                     <img src="images/otcs-rep-thumbnail.png" />
                   </div>
                   <div class="col-xs-9">
+                    <div>{{first_meeting.title}}</div>
+                    <div>Call {{first_meeting.rep.id}} now</div>
                   </div>
                 </div>
               </div>

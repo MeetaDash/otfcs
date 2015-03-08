@@ -90,6 +90,7 @@
 
     this.$closeButton.on('click', this.close.bind(this));
     this.$panel.show();
+    this.$publisher.children().not(':last').remove();
     this.$waitingHardwareAccess.show();
 
     this.emit('open');
@@ -245,6 +246,11 @@
         servicePanel.removeAllListeners();
         servicePanel = undefined;
       });
+    });
+
+    $(doc).on('click', '.sharedContentToggler', function() {
+      $(this).toggleClass('off');
+      $('#sharedContent').toggleClass('in');
     });
   });
 

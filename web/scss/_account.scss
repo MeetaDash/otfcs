@@ -159,3 +159,20 @@
     }
   }
 }
+
+.sharedContentToggler{
+  .sc-plus{
+    display: block;
+  }
+  .sc-minus{
+    display: none;
+  }
+  &.off{
+    .sc-plus{
+      display: none;
+    }
+    .sc-minus{
+      display: block;
+    }
+  }
+}
