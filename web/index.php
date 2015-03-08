@@ -77,8 +77,8 @@ $app->get('/account', function () use ($twig, $account_controller) {
     echo $twig->render('account.html', $context);
 });
 
-$app->get('/wm', function () use ($twig, $wealth_manager_controller) {
-    echo $twig->render('wealth_manager.html');
+$app->get('/wm', function () use ($twig, $home_controller) {
+    echo $twig->render('wealth_manager.html', array('controller' => $home_controller));
 });
 
 // Customer requests service
