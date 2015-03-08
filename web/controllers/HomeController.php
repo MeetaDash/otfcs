@@ -1,6 +1,6 @@
 <?php
-require __DIR__.'/../models/user.php';
-require __DIR__.'/../models/stock.php';
+require __DIR__.'/../models/User.php';
+require __DIR__.'/../models/Stock.php';
 
 class HomeController
 {
