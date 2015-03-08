@@ -73,7 +73,8 @@ $app->get('/rep', function () use ($app) {
 
 // Other routes
 $app->get('/account', function () use ($twig, $account_controller) {
-    echo $twig->render('account.html', array('controller' => $account_controller));
+    $context = $account_controller->show();
+    echo $twig->render('account.html', $context);
 });
 
 // Customer requests service
