@@ -1,0 +1,17 @@
+/* Buttons */
+.btn {
+  width: 90px;
+}
+.btn-large {
+  width: 200px;
+}
+.btn-danger {
+  color: white;
+  border-color: #c1160c;
+  background-color: #c1160c;
+}
+
+.btn-send {
+  color: white;
+  background-color: #0c0a0d;
+}
