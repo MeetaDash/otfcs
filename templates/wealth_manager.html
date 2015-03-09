@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
 {% block page_css %}
+<link rel="stylesheet" href="/css/common.css">
 <link rel="stylesheet" href="/css/representative.css">
 {% endblock %}
 
@@ -15,7 +16,7 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <button type="button" class="btn btn-primary get-customer">Get Customer</button>
+                    <button type="button" class="btn btn-large btn-primary get-customer">Get Customer</button>
                     <button type="button" class="btn btn-danger end-call">End Call</button>
                 </div>
             </div>
@@ -36,7 +37,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <dl class="dl-horizontal customer-info">
-                        <dt>Customer Name</dt>
+                        <dt>You are talking to: </dt>
                         <dd class="customer-name"></dd>
                     </dl>
                     <div class="dl-horizontal text-chat">
