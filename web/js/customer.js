@@ -143,7 +143,8 @@
 
   /* This needs a better way to be done. Handlebars maybe? */
   ServicePanel.prototype._renderNewMessage = function(data, mine) {
-    var template = '<div class="message"><div class="from">' + data.from + '</div><div class="msg-body">' + data.text + '</div></div>';
+    var from = mine ? 'You' : data.from;
+    var template = '<div class="message"><div class="from">' + from + '</div><div class="msg-body">' + data.text + '</div></div>';
     this.$messageLog.append(template);
   };
 
