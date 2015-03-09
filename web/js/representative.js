@@ -203,7 +203,7 @@
     var messageReceived = function(event) {
       var mine = event.from.connectionId === session.connection.connectionId;
       var data = event.data;
-      var template = '<div class="message"><div class="from">' + data.from + '</div><div class="msg-body">' + data.text + '</div></div>';
+      var template = '<p>' + (mine ? 'You' : data.from) + ': ' + data.text + '</p>';
       $messageLog.append(template);
     };
 
