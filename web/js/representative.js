@@ -7,98 +7,6 @@
 !(function(exports, doc, $, _, setImmediate, setTimeout, presentAlert, validateForm, OT,
            undefined) {
 
-  // Service Provider Login
-  var serviceProviderLogin = (function() {
-    var $modal, $form, $fields, $submit, $accessInfo, $accessSuccess, $accessError,
-        loginCompleteCallback, publisher;
-
-    var init = function(modalSelector, publisherConfig, done) {
-      $modal = $(modalSelector);
-      $form = $modal.find('.login-form');
-      $fields = $form.find('input');
-      $submit = $modal.find('.login-submit');
-      $accessInfo = $modal.find('.access-info');
-      $accessSuccess = $modal.find('.access-success');
-      $accessError = $modal.find('.access-error');
-
-      $form.submit(submit);
-      $submit.click(function() {
-        $form.submit();
-      });
-      $modal.on('hidden.bs.modal', modalHidden);
-
-      $modal.modal({
-        backdrop: 'static',
-        keyboard: false
-      });
-
-      publisher = OT.initPublisher(publisherConfig.el, publisherConfig.props);
-      publisher.on('accessAllowed', publisherAllowed)
-               .on('accessDenied', publisherDenied);
-
-      loginCompleteCallback = done;
-    };
-
-    var submit = function(event) {
-      event.preventDefault();
-
-      disableFields();
-
-      if (!publisher.accessAllowed || validateForm($form, validationRequirements) === false) {
-        enableFields();
-        return;
-      }
-
-      // NOTE: There is no authentication implemented for representatives. For that reason, there is
-      // no request sent to the server. The structure of the code is designed such that
-      // authentication can be added at a later time.
-
-      setImmediate(function() {
-        loginCompleteCallback(publisher);
-        $modal.modal('hide');
-        enableFields();
-      });
-
-    };
-
-    var publisherAllowed = function() {
-      $submit.prop('disabled', false);
-      $accessInfo.hide();
-      $accessSuccess.show();
-    };
-
-    var publisherDenied = function() {
-      $accessInfo.hide();
-      $accessError.show();
-    };
-
-    var modalHidden = function() {
-      $form[0].reset();
-      $accessInfo.show();
-      $accessSuccess.hide();
-      $accessError.hide();
-    };
-
-    var validationRequirements = {
-      '.representative-name': {
-        maxLength: 50,
-        required: true
-      }
-    };
-
-    var disableFields = function() {
-      $fields.prop('disabled', true);
-    };
-
-    var enableFields = function() {
-      $fields.prop('disabled', false);
-    };
-
-    return {
-      init: init
-    };
-  }());
-
   // Service Provider
   var serviceProvider = (function() {
     var $el, $publisher, $subscriber, $getCustomer, $endCall, $customerName,
@@ -118,16 +26,28 @@
 
       repName = representativeName;
 
+      config = publisherConfig();
+      publisher = OT.initPublisher(config.el, config.props);
+      publisher.on('accessAllowed', publisherAllowed)
+               .on('accessDenied', publisherDenied);
+
       $getCustomer.on('click', getCustomer);
       $endCall.on('click', endCall);
     };
 
     var start = function(pub) {
       $getCustomer.show();
-      publisher = pub;
       publisher.on('streamDestroyed', function(event) {
         event.preventDefault();
       });
+    };
+
+    var publisherAllowed = function() {
+      console.log('well done!');
+    };
+
+    var publisherDenied = function() {
+      console.log('boooo!');
     };
 
     var getCustomer = function() {
@@ -315,11 +235,7 @@
 
   $(doc).ready(function() {
     serviceProvider.init('#service-provider', 'Arin');
-    serviceProviderLogin.init(
-      '#service-provider-login-modal',
-      serviceProvider.publisherConfig(),
-      serviceProvider.start
-    );
+    serviceProvider.start();
   });
 
 }(window, window.document, jQuery, _, setImmediate, window.setTimeout, window.presentAlert,
