@@ -169,6 +169,8 @@
     var beginCall = function(customerData) {
       renderCustomer(customerData);
 
+      videoProperties.name = customerData.customerName;
+
       session = OT.initSession(customerData.apiKey, customerData.sessionId);
       session.on('sessionConnected', sessionConnected);
       session.on('sessionDisconnected', sessionDisconnected);
@@ -253,7 +255,16 @@
     var publisherConfig = function() {
       return {
         el: $publisher[0],
-        props: videoProperties
+        props: {
+          insertMode: 'append',
+          width: '100%',
+          height: '100%',
+          name: 'Arin, Financial Advisor',
+          style: {
+            buttonDisplayMode: 'off',
+            nameDisplayMode: 'off',
+          }
+        }
       };
     };
 
@@ -262,7 +273,9 @@
       width: '100%',
       height: '100%',
       style: {
-        buttonDisplayMode: 'off'
+        buttonDisplayMode: 'auto',
+        nameDisplayMode: 'on',
+        audioLevelDisplayMode: 'off'
       }
     };
 
