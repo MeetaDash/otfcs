@@ -180,6 +180,10 @@
       });
     };
 
+    var tryToSendOnEnter = function(e) {
+      if (e.keyCode == 13) sendMessage();
+    };
+
     var beginCall = function(customerData) {
       renderCustomer(customerData);
 
@@ -199,6 +203,7 @@
       });
 
       $sendButton.click(sendMessage);
+      $messageText.keyup(tryToSendOnEnter);
     };
 
     var endCall = function() {
