@@ -36,7 +36,7 @@
 }
 
 .text-chat .history {
-  height: 80%;
+  height: 300px;
   overflow: auto;
   width: 100%;
   margin-bottom: 5px;
