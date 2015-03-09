@@ -16,6 +16,11 @@
   background-color: #0c0a0d;
 }
 
+.btn-send:hover {
+  color: white;
+  background-color: rgba(51, 51, 51, 0.82);
+}
+
 .OT_name {
   text-align: left;
 }
