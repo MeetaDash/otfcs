@@ -103,9 +103,9 @@
   var serviceProvider = (function() {
     var $el, $publisher, $subscriber, $getCustomer, $endCall, $customerName,
         $sendButton, $messageLog, $messageText,
-        session, publisher, subscriber, connected, waitingForCustomer;
+        session, publisher, subscriber, connected, waitingForCustomer, repName;
 
-    var init = function(selector) {
+    var init = function(selector, representativeName) {
       $el = $(selector);
       $publisher = $el.find('.publisher');
       $subscriber = $el.find('.subscriber');
@@ -115,6 +115,8 @@
       $messageLog = $el.find('.history');
       $messageText = $el.find('.message-text');
       $sendButton = $el.find('.btn-send');
+
+      repName = representativeName;
 
       $getCustomer.on('click', getCustomer);
       $endCall.on('click', endCall);
@@ -166,6 +168,18 @@
       $endCall.hide();
     };
 
+    var sendMessage = function(e) {
+      session.signal({
+        type: 'chat',
+        data: {
+          from: repName,
+          text: $messageText.val()
+        }
+      }, function(error) {
+        if (!error) { $messageText.val(''); }
+      });
+    };
+
     var beginCall = function(customerData) {
       renderCustomer(customerData);
 
@@ -183,6 +197,8 @@
           console.log('Connecting to the session failed. Try connecting to this session again.');
         }
       });
+
+      $sendButton.click(sendMessage);
     };
 
     var endCall = function() {
@@ -259,7 +275,7 @@
           insertMode: 'append',
           width: '100%',
           height: '100%',
-          name: 'Arin, Financial Advisor',
+          name: repName + ', Financial Advisor',
           style: {
             buttonDisplayMode: 'off',
             nameDisplayMode: 'off',
@@ -293,7 +309,7 @@
 
 
   $(doc).ready(function() {
-    serviceProvider.init('#service-provider');
+    serviceProvider.init('#service-provider', 'Arin');
     serviceProviderLogin.init(
       '#service-provider-login-modal',
       serviceProvider.publisherConfig(),
