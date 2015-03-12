@@ -72,8 +72,14 @@ $app->get('/', function () use ($app, $twig, $home_controller) {
 });
 
 // Representative landing page
-$app->get('/rep', function () use ($app) {
-    $app->render('representative.php');
+$app->get('/rep', function () use ($twig, $home_controller, $account_controller) {
+    $context = array(
+        'controller' => $home_controller,
+        'user' => $home_controller->lastUser(),
+        'action' => '/wm/dashboard',
+        'cash_transactions' => $account_controller->dummy_cash_transactions()
+    );
+    echo $twig->render('rep.html', $context);
 });
 
 // Customer routes
