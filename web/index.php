@@ -88,23 +88,6 @@ $app->get('/account', function () use ($twig, $account_controller) {
     echo $twig->render('account.html', $context);
 });
 
-// Wealth Manager routes
-$app->get('/wm', function () use ($twig, $home_controller) {
-    $context = array(
-        'controller' => $home_controller,
-        'user' => $home_controller->lastUser(),
-        'action' => '/wm/dashboard'
-    );
-    echo $twig->render('home.html', $context);
-});
-
-$app->get('/wm/dashboard', function () use ($twig, $home_controller) {
-    $context = array(
-        'user' => $home_controller->lastUser()
-    );
-    echo $twig->render('wealth_manager.html', $context);
-});
-
 // Customer requests service
 //
 // A) Create a help session
