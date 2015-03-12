@@ -1,0 +1,42 @@
+{% if transaction %}
+{% if index > 1 %}
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="line"></div>
+    </div>
+  </div>
+{% endif %}
+<div class="row transaction-data">
+  <div class="col-xs-12">
+    <div class="row">
+      <div class="col-xs-12">
+        {{transaction.date}}
+      </div>
+      <div class="col-xs-6">
+        <div class="row">
+          <div class="col-xs-12">
+            {{transaction.subtext}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            {{transaction.info}}
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-3 transaction-change">
+        {% if transaction.debt %}
+        <span class="debt">${{transaction.amount}}</span>
+        {% else %}
+        <span class="credit">${{transaction.amount}}</span>
+        {% endif %}
+      </div>
+      <div class="col-xs-3">
+        <div class="pull-right">
+          <strong>${{transaction.total}}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
