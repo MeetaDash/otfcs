@@ -9,7 +9,7 @@
 
   // Service Provider
   var serviceProvider = (function() {
-    var $el, $publisher, $subscriber, $getCustomer, $endCall, $customerName,
+    var $el, $publisher, $subscriber, $endCall, $customerName,
         $sendButton, $messageLog, $messageText,
         session, publisher, subscriber, connected, waitingForCustomer, repName;
 
@@ -17,12 +17,12 @@
       $el = $(selector);
       $publisher = $el.find('.publisher');
       $subscriber = $el.find('.subscriber');
-      $getCustomer = $el.find('.get-customer');
       $endCall = $el.find('.end-call');
       $customerName = $el.find('.customer-name');
       $messageLog = $el.find('.history');
       $messageText = $el.find('.message-text');
       $sendButton = $el.find('.btn-send');
+      $chatWrap = $el.find('#chat-opts');
 
       repName = representativeName;
 
@@ -31,28 +31,23 @@
       publisher.on('accessAllowed', publisherAllowed)
                .on('accessDenied', publisherDenied);
 
-      $getCustomer.on('click', getCustomer);
       $endCall.on('click', endCall);
     };
 
     var start = function(pub) {
-      $getCustomer.show();
       publisher.on('streamDestroyed', function(event) {
         event.preventDefault();
       });
     };
 
     var publisherAllowed = function() {
-      console.log('well done!');
+      getCustomer();
     };
 
     var publisherDenied = function() {
-      console.log('boooo!');
     };
 
     var getCustomer = function() {
-
-      $getCustomer.prop('disabled', true);
 
       $.post('/help/queue', dequeueData, 'json')
         .done(function(customerData, textStatus, jqXHR) {
@@ -76,15 +71,14 @@
       // templating
       $customerName.text(customerData.customerName);
 
-      $getCustomer.hide();
       $endCall.show();
     };
 
     var clearCustomer = function() {
       // cleanup templated data
       $customerName.text('');
+      $chatWrap.hide();
 
-      $getCustomer.show().prop('disabled', false);
       $endCall.hide();
     };
 
@@ -172,6 +166,8 @@
       session.off();
       session = undefined;
       clearCustomer();
+
+      setTimeout(getCustomer, 10000);
     };
 
     var streamCreated = function(event) {
@@ -185,12 +181,14 @@
           }
         });
       }
+      $chatWrap.show();
     };
 
     var streamDestroyed = function(event) {
       if (subscriber && event.stream === subscriber.stream) {
         endCall();
       }
+      getCustomer();
     };
 
     var publisherConfig = function() {
@@ -204,6 +202,7 @@
           style: {
             buttonDisplayMode: 'off',
             nameDisplayMode: 'off',
+            audioLevelDisplayMode: 'off'
           }
         }
       };
