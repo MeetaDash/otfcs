@@ -24,3 +24,7 @@
 .OT_name {
   text-align: left;
 }
+
+.OT_publisher {
+  border-radius: 100% !important;
+}

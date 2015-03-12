@@ -46,10 +46,6 @@
   z-index: 200;
 }
 
-.OT_publisher {
-  border-radius: 100% !important;
-}
-
 .waiting {
   position: absolute;
   top: 0;
