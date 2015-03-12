@@ -19,7 +19,7 @@ class AccountController
         );
     }
 
-    private function dummy_cash_transactions()
+    public function dummy_cash_transactions()
     {
         return array(
             new CashTransaction('Check deposit #844', false, '1,543.50', '127,559.33', '11/14/2013'),
