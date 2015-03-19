@@ -43,12 +43,19 @@ $config->load(array('opentok', 'redis'), true);
  * -----------------------------------------------------------------------------------------------*/
 $opentok = new OpenTok($config->opentok('key'), $config->opentok('secret'));
 
+// Initialize OpenTok instance, store it in the app contianer
+$app->container->singleton('opentok', function () {
+    return $opentok;
+});
+
 /* ------------------------------------------------------------------------------------------------
  * Redis Initialization
  * -----------------------------------------------------------------------------------------------*/
 $redis = new \Predis\Client($config->redis(), array('prefix' => $config->redis('prefix')));
 define('PREFIX_HELP_SESSION_KEY', 'helpsession:');
+define('PREFIX_ARCHIVE_KEY', 'archive:');
 define('HELP_QUEUE_KEY', 'helpqueue');
+define('ARCHIVE_QUEUE_KEY', 'archivequeue');
 
 /* ------------------------------------------------------------------------------------------------
  * Routing
@@ -229,7 +236,80 @@ $app->delete('/help/queue/:queueId', function ($queueId) use ($app, $redis) {
     $app->response->setStatus(204);
 });
 
+// Creates a new archive associated to the given session
+//
+//    Request: (URL encoded)
+//    *  `session_id`: The session which will own the archive
+//    *  `name`: The name given to the archive
+//
+//    Response: (JSON encoded)
+//    *  `archive`: A JSON representation of the archive object created
+$app->get('/archive/start', function () use ($app) {
 
+    $sessionId = $app->request->params('session_id');
+    $name = $app->request->params('name');
+
+    $helpSessionKey = PREFIX_HELP_SESSION_KEY.$sessionId;
+
+    // Validation
+    // Check to see that the help session exists
+    $redisResponse = $redis->exists($helpSessionKey);
+    if (!handleRedisError($redisResponse, $app, 'Could not check for the existence of the help session.')) {
+        return;
+    }
+    $exists = (bool)$redisResponse;
+    if (!$exists) {
+        $app->response->setStatus(400);
+        $app->response->setBody('An invalid session_id was given.');
+        return;
+    }
+
+    // Add the help session to the queue
+    $redisResponse = $redis->rpush(ARCHIVE_QUEUE_KEY, $helpSessionKey);
+    if (!handleRedisError($redisResponse, $app, 'Could not add session archive to the archive queue.')) {
+        return;
+    }
+    $archive = $app->opentok->startArchive($sessionId, $name);
+
+    $app->response->headers->set('Content-Type', 'application/json');
+    echo $archive->toJson();
+});
+
+// Stops an archive associated to the given session
+//
+//    Request: (URL encoded)
+//    *  `archiveId`: The archive that wants to be stopped
+//
+//    Response: (JSON encoded)
+//    *  `archive`: A JSON representation of the archive object
+$app->get('/archive/stop/:archiveId', function($archiveId) use ($app) {
+    $archive = $app->opentok->stopArchive($archiveId);
+    $app->response->headers->set('Content-Type', 'application/json');
+    echo $archive->toJson();
+});
+
+// Deletes an existing archive
+//
+//    Request: (URL encoded)
+//    *  `archiveId`: The archive that wants to be deleted
+//
+$app->delete('/archive/:archiveId', function($archiveId) use ($app) {
+    $app->opentok->deleteArchive($archiveId);
+    $app->response->setStatus(204);
+});
+
+// Retrieves an archive
+//
+//    Request: (URL encoded)
+//    *  `archiveId`: The archive that wants to be deleted
+//
+//    Response: (JSON encoded)
+//    *  `archive`: A JSON representation of the archive object
+$app->get('/archive/:archiveId', function($archiveId) use ($app) {
+    $archive = $app->opentok->getArchive($archiveId);
+
+    echo $archive->toJson();
+});
 
 /* ------------------------------------------------------------------------------------------------
  * Application Start
