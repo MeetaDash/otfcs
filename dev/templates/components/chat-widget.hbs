@@ -1,0 +1,22 @@
+<div id="service-panel" {{bind-attr class=":chat-widget shouldChatStick:stick :video-holder :on-queue" }}>
+    <div class="subscriber"></div>
+    <div class="publisher"></div>
+    <div class="text-chat">
+      <div class="history"></div>
+      <div class="new-message">
+        <input type="text" class="form-control message-text" name="new-message" placeholder="Send a text">
+        <input type="button" class="btn btn-send" name="send" value="Send">
+      </div>
+    </div>
+    <div class="bottom-bar">
+        <button type="button" class="btn btn-large btn-danger close-button">Cancel call</button>
+    </div>
+    <div class="waiting">
+        <p class="hardware-access">Please allow access to your camera and mic.</p>
+        <div class="representative">
+          <p>In the queue</p>
+          <p class="big">2 min</p>
+          <p class="small">Aprox wait</p>
+        </div>
+    </div>
+</div>

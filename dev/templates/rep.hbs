@@ -1,0 +1,330 @@
+<div class="grey-container full-size">
+  {{nav-bar logout=true rep=true}}
+  <div class="container rep-container">
+    <div class="row">
+      {{! Left Column }}
+      <div class="col-xs-3 left-column">
+        {{! Basic User Information }}
+        <h1>Scott Small</h1>
+        <div class="row">
+          <div class="col-xs-12">
+            <small>Email: scott@tokbox.com</small>
+          </div>
+          <div class="col-xs-12">
+            <small>Account No. X789 2246 4350</small>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 info-container">
+              {{#if isScheduleOpen}}
+              <h5 class="white-line" {{action 'hideScheduleContainer'}}>
+                Schedule
+                <img class="pull-right" src="images/black-arrow-up.png">
+              </h5>
+              {{/if}}
+              {{#unless isScheduleOpen}}
+              <h5 class="white-line" {{action 'openScheduleContainer'}}>
+                Schedule
+                <img class="pull-right" src="images/black-arrow-down.png">
+
+              </h5>
+              {{/unless}}
+              <div class="collapse in" id="scheduleContainer">
+                <h6 class="meetings-title">Upcoming meetings</h6>
+                {{#each meeting in meetings}}
+                  <div {{bind-attr class=":meeting meeting.isToday:highlight"}}>
+                    <span>{{meetingTime meeting.time}}:</span>
+                    <span>{{meeting.title}}</span>
+                  </div>
+                  {{/each}}
+                <h6 class="white-line"> </h6>
+                {{! Calendar }}
+                <div class="row calendar">
+                  <div class="col-xs-12">
+                   {{date-picker meetings=meetings enablePicking=true ignoreToday=true}}
+                  </div>
+                </div>
+                {{! Update / Time inputs / Schedule btn}}
+                <div class="row">
+                  <div class="col-xs-12 input-box">
+                    {{input type="text" value=meetingTitle name="Portfolio Update" placeholder="Meeting title"}}
+                  </div>
+                  <div class="col-xs-12 time-picker">
+                    {{select-picker defaultItem="Time" items=times selectId='time-picker-1000'}}
+                  </div>
+
+                  <div class="col-xs-12 schedule-button">
+                    <img {{action 'scheduleMeeting' }} src="/images/schedule_button.png"/>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+
+
+        {{! Previous Sessions }}
+        <div class="row info-container previous-sessions">
+          <div class="col-xs-12">
+            {{#if isPreviewSessionOpen}}
+            <h5 class="white-line" {{action 'hidePreviewSessions'}}>
+              Previous Sessions
+              <img class="pull-right" src="images/black-arrow-up.png">
+            </h5>
+            {{/if}}
+            {{#unless isPreviewSessionOpen}}
+            <h5 class="white-line" {{action 'openPreviewSessions'}}>
+              Previous Sessions
+              <img class="pull-right" src="images/black-arrow-down.png">
+            </h5>
+            {{/unless}}
+          </div>
+          <div class="collapse in" id="previousSessionContainer">
+            <div class="col-xs-12 archives">
+              {{#each archive in archives}}
+                <div class="row white-container archive">
+                  <div class="col-xs-3 archive-image">
+                    {{#unless _view.contentIndex}}
+                      {{#if archivePending}}
+                      <div class="pending" {{action 'showArchiveEntry' archive target="controllers.application"}}><img src="images/play_button.png"></div>
+                      {{else}}
+                      <div {{action 'showArchiveEntry' archive target="controllers.application"}}><img src="images/play_button.png"></div>
+                      {{/if}}
+                    {{else}}
+                      <div {{action 'showArchiveEntry' archive target="controllers.application"}}><img src="images/play_button.png"></div>
+                    {{/unless}}
+                  </div>
+                  <div class="col-xs-9 archive-text">
+                    <div>{{meetingTime archive.time}}</div>
+                    <div>{{archive.title}}</div>
+                    {{#unless _view.contentIndex}}
+                      {{#if archivePending}}
+                      <div>Processing Video...</div>
+                      {{else}}
+                      <div>{{minutes archive.duration}}</div>
+                      {{/if}}
+                    {{else}}
+                      <div>{{minutes archive.duration}}</div>
+                    {{/unless}}
+                  </div>
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        </div> {{! /Previous Sessions }}
+
+      </div>
+      {{! Center Column }}
+      <div class="col-xs-4 center-column">
+        {{! Porfolio Review}}
+        <div class="row">
+          <div class="col-xs-11 col-xs-offset-1 white-container">
+              <h3>Portfolio Review: 2015</h3>
+              <div class="row">
+
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="pull-left">
+                    <small>1:20 - 2:20 PM PST</small>
+                  </div>
+                  <div class="pull-right">
+                    <small>Call Time: <span id="callTime">00:00</span></small>
+                  </div>
+                </div>
+              </div>
+              <div class="row portfolio-review-image">
+                <div class="col-xs-12">
+                  {{rep-chat-widget}}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="grey-line portfolio-review-line"> </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  <h5>Today's Agenda:</h5>
+                </div>
+                <div class="col-xs-12">
+
+                <ul class="col-xs-12 agenda">
+                    <li>Review portfolio performance in 2014</li>
+                    <li>Evaluate distribution of funds</li>
+                    <li>New investment opportunities</li>
+                    <li>Set 2015 investment goals</li>
+                    <li>Open questions and concerns</li>
+                  </ul>
+                </div>
+              </div>
+          </div>
+
+
+        </div> {{! /Portfolio Review}}
+      </div>
+
+      {{! Right Column }}
+      <div class="col-xs-5 right-column">
+
+        <div class="row">
+          {{! Account Overview}}
+          <div class="col-xs-11 col-xs-offset-1 info-container">
+              <div class="row">
+                <div class="col-xs-12 account-overview-title">
+                  {{#if isAccountOverviewOpen}}
+                  <h5 class="white-line" {{action 'hideAccountOverview'}}>
+                    Account Overview
+                    <img class="pull-right" src="images/black-arrow-up.png">
+                  </h5>
+                  {{/if}}
+                  {{#unless isAccountOverviewOpen}}
+                  <h5 {{action 'openAccountOverview'}}>
+                    Account Overview
+                    <img class="pull-right" src="images/black-arrow-down.png">
+
+                  </h5>
+                  {{/unless}}
+                </div>
+              </div>
+              <div class="collapse in" id="accountOverviewContainer">
+                {{! Cash/$/Fixed/$ }}
+                <div class="row">
+                    <div class="col-xs-2 account-overview-label">
+                      <strong>Cash</strong>
+                    </div>
+                    <div class="col-xs-3 account-overview-cash">
+                      $127,559.33
+                    </div>
+                      <div class="col-xs-3 account-overview-label">
+                       <strong>Fixed</strong>
+                      </div>
+                      <div class="col-xs-4 text-right account-overview-cash">
+                        $164,832.21
+                      </div>
+                </div>
+                {{! Equity/$/Retirement/$ }}
+                <div class="row">
+                  <div class="col-xs-2 account-overview-label">
+                    <strong>Equity</strong>
+                  </div>
+                  <div class="col-xs-3 account-overview-cash">
+                    $141,112.96
+                  </div>
+                  <div class="col-xs-3 account-overview-label">
+                    <strong>Retirement</strong>
+                  </div>
+                  <div class="col-xs-4 text-right account-overview-cash">
+                    $198,451.43
+                  </div>
+                </div>
+                {{! The tabs }}
+                <div class="row account-overview-tabs">
+                  <div class="col-xs-12">
+                    <ul class="nav nav-tabs text-center">
+                      <li class="active tab-label-cash"><a href="#cash" data-toggle="tab">Cash</a></li>
+                      <li class="tab-label-equity"><a href="#equity" data-toggle="tab">Equity</a></li>
+                      <li class="tab-label-fixed"><a href="#fixed" data-toggle="tab">Fixed</a></li>
+                      <li class="tab-label-retirement"><a href="#retirement" data-toggle="tab">Retirement</a></li>
+                    </ul>
+                    <div class="tab-content transactions">
+                      <div class="tab-pane active" id="cash">
+                        <div class="transaction-entry">
+                          {{#each controllers.application.cashTransactions}}
+                              {{rep-transaction transaction=this index=_view.contentIndex}}
+                          {{/each}}
+                        </div>
+                      </div>
+                      <div class="tab-pane" id="equity">
+                        <div class="transaction-entry">
+                      {{#each controllers.application.equityTransactions}}
+                           {{rep-transaction transaction=this index=_view.contentIndex}}
+                      {{/each}}
+                    </div>
+                  </div>
+                      <div class="tab-pane" id="fixed">
+                        <div class="transaction-entry">
+                      {{#each controllers.application.fixedTransactions }}
+                            {{rep-transaction transaction=this index=_view.contentIndex}}
+                      {{/each}}
+                    </div>
+                  </div>
+                      <div class="tab-pane" id="retirement">
+                        <div class="transaction-entry">
+
+                          <div class="row transaction-data">
+                            <div class="col-xs-12">
+                                <img src="/images/retirement_graph.png" width="100%">
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div> {{! /Account Overview w}}
+            {{! Recommended Funds }}
+            <div class="col-xs-11 col-xs-offset-1 rec-funds info-container">
+              {{#if isRecommendedFundsOpen}}
+              <h5 class="white-line" {{action 'hideRecommendedFunds'}}>
+                Recommended Funds
+                <img class="pull-right" src="images/black-arrow-up.png">
+              </h5>
+              {{/if}}
+              {{#unless isRecommendedFundsOpen}}
+              <h5 class="white-line" {{action 'openRecommendedFunds'}}>
+                Recommended Funds
+                <img class="pull-right" src="images/black-arrow-down.png">
+              </h5>
+               {{/unless}}
+              <div class="collapse in" id="recommendedFundsContainer">
+                <div class="row">
+                  <div class="col-xs-12">
+                    <small>{{selectedFundTitle}}</small>
+                  </div>
+                    <div class="col-xs-12 funds-image">
+                      <h2>
+                        <img {{bind-attr src=selectedFundUrl }} width="100%">
+                      </h2>
+                    </div>
+                    <div class="col-xs-12">
+                      <h4 class="white-line"></h4>
+                    </div>
+
+                    {{#each sharedContent}}
+                      <div class="col-xs-12" {{action 'selectFund' _view.contentIndex}}>
+                        <small {{bind-attr class="isSelected:selected"}}>{{title}}</small>
+                      </div>
+                    {{/each}}
+
+                    <div class="col-xs-12 funds-share-button">
+                        <img {{action 'shareContent'}} class="pull-right" src="images/share_button.png">
+                    </div>
+                    <div class="col-xs-12 line-holder">
+                      <h6 class="white-line"></h6>
+                    </div>
+                    {{! Customer Currently Viewing }}
+                    <div class="col-xs-12 customer-viewing">
+                      <h5>Customer Currently Viewing</h5>
+                      {{#if sharedFund}}
+                        <div class="row">
+                          <div class="col-xs-5">
+                            <img {{bind-attr src=sharedFund.graph}} width="100%">
+                          </div>
+                          <div class="col-xs-4 customer-viewing-text">
+                            {{sharedFund.title}} - {{sharedFund.timeShared}}
+                          </div>
+                        </div>
+                      {{/if}}
+
+                    </div> {{! /Customer Currently Viewing}}
+
+                </div>
+              </div>
+            </div>{{! /Recommended Funds }}
+        </div>
+      </div>
+    </div> {{! /Right Column}}
+  </div>
+  </div>
+</div>

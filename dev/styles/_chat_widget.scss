@@ -1,0 +1,169 @@
+.chat-widget {
+  display: inline-block;
+  box-shadow: 5px 5px 5px rgba(0,0,0,0.25);
+  background: white;
+  z-index: 9999;
+  float: right;
+  margin-bottom: 10px;
+}
+.chat-widget #OTCS[data-state="deviceAllow"] {
+  height: 170px;
+}
+.col-xs-10.chat-widget-container {
+  min-height: 265px;
+  padding-left: 0;
+  padding-right: 0;
+}
+.chat-widget.stick {
+  position: fixed;
+  top: 1%;
+  right: 2%;
+}
+
+#service-panel {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 300px;
+  height: 480px;
+  box-shadow: 0 0 5px #333;
+  background-color: #fff;
+
+  &.video-holder {
+    position: relative;
+    text-align: center;
+
+    .bottom-bar {
+      position: absolute;
+      bottom: 1em;
+      text-align: center;
+      z-index: 300;
+      left: 0;
+      right: 0;
+    }
+  }
+
+  &.on-queue {
+    width: 100%;
+    height: 350px;
+
+    .publisher{
+      width: 100px;
+      height: 100px;
+      right: 100px;
+      bottom: 60%;
+    }
+  }
+
+  .subscriber,
+  .publisher {
+    position: absolute;
+  }
+
+  .subscriber {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    z-index: 100;
+  }
+
+  .publisher {
+    bottom: 50%;
+    right: 0;
+    height: 16.7%;
+    width: 25%;
+    z-index: 200;
+  }
+}
+
+.waiting {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  height: 1.3em;
+  font-size: 1.3em;
+  color: #4a494b;
+
+  .representative {
+    display: none;
+  }
+
+  .representative {
+    height: 200px;
+    p{
+      margin: 0;
+    }
+  }
+}
+
+p.big {
+  font-size: 40px;
+}
+
+p.small {
+  font-size: 20px;
+}
+
+/* Text chat related */
+.text-chat {
+  height: 40%;
+  margin-top: 75%;
+  padding: 0 10px;
+
+  .history {
+    height: 140px;
+    overflow: auto;
+    width: 100%;
+    margin-bottom: 5px;
+
+    .message {
+      margin-top: 5px;
+
+      .msg-body {
+        display: inline;
+        margin-top: 10px;
+        border: 1px solid black;
+        border-radius: 5px;
+        background: whitesmoke;
+        width: 310px;
+        float: left;
+        font-weight: bold;
+        text-align: justify;
+        padding: 2px 8px;
+      }
+
+      .from {
+        width: 50px;
+        display: inline;
+        float: left;
+        margin-top: 10px;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .new-message {
+    input[type='text'] {
+      width: 100%;
+      border-radius: 5px;
+      float: left;
+
+      &:focus{
+        border-color: rgba(0, 0, 0, 0.3);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 3px rgba(0, 0, 0, 0.6);
+        outline: 0 none;
+      }
+    }
+
+    input[type='button'] {
+      position: absolute;
+      border-radius: 5px;
+      right: 10px;
+      float: right;
+    }
+  }
+}

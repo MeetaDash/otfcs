@@ -1,0 +1,8 @@
+<select class="selectpicker" {{bind-attr id=selectId}}>
+  {{#if defaultItem}}
+  <option>{{defaultItem}}</option>
+  {{/if}}
+  {{#each items}}
+    <option>{{this}}</option>
+  {{/each}}
+</select>
