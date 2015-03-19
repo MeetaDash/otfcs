@@ -11,25 +11,18 @@ use \werx\Config\Container;
 use \Predis\Response\ErrorInterface as RedisErrorInterface;
 
 /* ------------------------------------------------------------------------------------------------
- * Controllers Initialization
- * -----------------------------------------------------------------------------------------------*/
-require __DIR__.'/controllers/controllers_loader.php';
-$home_controller = new HomeController();
-$account_controller = new AccountController();
-
-/* ------------------------------------------------------------------------------------------------
  * Twig Template Engine Initialization
  * -----------------------------------------------------------------------------------------------*/
-$loader = new Twig_Loader_Filesystem('../templates');
+$loader = new Twig_Loader_Filesystem('.');
 $twig = new Twig_Environment($loader /* ,array(twig config) */);
-$template = $twig->loadTemplate('layout.html');
+//$template = $twig->loadTemplate('layout.html');
 
 /* ------------------------------------------------------------------------------------------------
  * Slim Application Initialization
  * -----------------------------------------------------------------------------------------------*/
 $app = new Slim(array(
     'log.enabled' => true,
-    'templates.path' => '../templates'
+    'templates.path' => './'
 ));
 
 /* ------------------------------------------------------------------------------------------------
@@ -62,30 +55,8 @@ define('HELP_QUEUE_KEY', 'helpqueue');
  * -----------------------------------------------------------------------------------------------*/
 
 // Customer landing page
-$app->get('/', function () use ($app, $twig, $home_controller) {
-    $context = array(
-        'controller' => $home_controller,
-        'user' => $home_controller->firstUser(),
-        'action' => '/account'
-    );
-    echo $twig->render('home.html', $context);
-});
-
-// Representative landing page
-$app->get('/rep', function () use ($twig, $home_controller, $account_controller) {
-    $context = array(
-        'controller' => $home_controller,
-        'user' => $home_controller->lastUser(),
-        'action' => '/wm/dashboard',
-        'cash_transactions' => $account_controller->dummy_cash_transactions()
-    );
-    echo $twig->render('rep.html', $context);
-});
-
-// Customer routes
-$app->get('/account', function () use ($twig, $account_controller) {
-    $context = $account_controller->show();
-    echo $twig->render('account.html', $context);
+$app->get('/', function () use ($app, $twig) {
+    echo $twig->render('main.html');
 });
 
 // Customer requests service
