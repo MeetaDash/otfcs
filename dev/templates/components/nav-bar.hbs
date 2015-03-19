@@ -1,0 +1,17 @@
+<nav class="navbar navbar-default" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">National Atlantic Bank</a>
+    </div>
+    <div class="demo-link pull-right">
+      <ul>
+        {{#if rep}}
+        <li class="user-avatar"><img src="/images/otcs-rep-thumbnail.png"></li>
+        {{/if}}
+        {{#if logout}}
+        <li class="logout"><a href="#">Log Out <img src="images/red-arrow-right.png"></a></li>
+        {{/if}}
+      </ul>
+    </div>
+  </div>
+</nav>

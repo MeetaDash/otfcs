@@ -1,0 +1,48 @@
+.date-picker {
+
+  .datepicker-inline {
+    width: auto;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  .datepicker {
+    .meeting {
+      background-color: $alert;
+      &:hover {
+        background-color: $alert;
+      }
+    }
+
+    .table-condensed {
+      margin: auto; 
+      
+      thead {
+        font-family: $heavy-font;
+      }
+    }
+
+    table tr td.active.active, table tr td.active.active:hover  {
+      background-color: $alert;
+      background-image: none !important;
+      color: white;
+      box-shadow: none !important;
+      &.disabled {
+        color: grey;
+      }
+    }
+    td {
+      border-radius: 0;
+      -webkit-border-radius: 0;
+      font-size: 14px;
+      &.disabled {
+        color: black;
+      }
+      &.new, &.old {
+        color: grey;
+      }
+    }
+  }
+}
