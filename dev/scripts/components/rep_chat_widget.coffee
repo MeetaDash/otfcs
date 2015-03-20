@@ -23,6 +23,7 @@ class RepServicePanel extends EventEmitter2
     @$startArchive = @$panel.find ".btn-record"
     @$stopArchive = @$panel.find ".btn-record-stop"
     @$customerName = @$panel.find ".customer-name"
+    @$dragChat = @$panel.find "#chat-collapse"
     @$textChat = @$panel.find ".text-chat"
     @$messageLog = @$panel.find ".messages"
     @$messageText = @$panel.find ".message-text"
@@ -88,9 +89,16 @@ class RepServicePanel extends EventEmitter2
 
     @$sendButton.on 'click', @sendMessage
     @$messageText.on 'keyup', @sendMessageOnEnter
-    @$textChat.show()
     @$startArchive.show()
     @$stopArchive.hide()
+    @enableTextChat()
+
+  enableTextChat: =>
+    @$textChat.show()
+    @$dragChat.draggable
+      snap: '.container'
+      snapMode: 'inner'
+      snapTolerance: 10
 
   startArchive: =>
     @$startArchive.hide()
@@ -238,3 +246,10 @@ TBB.RepChatWidgetComponent = Ember.Component.extend
     repName = "Scott"
     serviceProvider = new RepServicePanel('#service-provider', repName)
     serviceProvider.start()
+  actions:
+    toggleChat: =>
+      $(".btn-chat").toggleClass("pressed")
+      if $(".btn-chat").hasClass("pressed")
+        $("#chat-collapse").show()
+      else
+        $("#chat-collapse").hide()
