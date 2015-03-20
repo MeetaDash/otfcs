@@ -41,12 +41,15 @@
     .btn{
       width: auto;
       height: 40px;
+      img{
+        width: 20px;
+      }
     }
 
     .btn-record{
       float: left;
       color: white;
-      width: 56px;
+      width: 40px;
       display: none;
     }
 
