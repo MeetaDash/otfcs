@@ -36,6 +36,8 @@ class ServicePanel extends EventEmitter2
     @session.on "streamCreated", this._streamCreated, this
     @session.on "streamDestroyed", this._streamDestroyed, this
     @session.on "signal:chat", this._messageReceived, this
+    @session.on "signal:archiveAdded", this._archiveAdded, this
+    @session.on "signal:archiveReady", this._archiveReady, this
 
     @publisher = OT.initPublisher(@$publisher[0], @_videoProperties)
     @publisher.on "accessAllowed", this._publisherAllowed, this
@@ -73,6 +75,14 @@ class ServicePanel extends EventEmitter2
       @session.disconnect()
     else
       @_cleanUp()
+
+  _archiveAdded: (event) =>
+    @archive = event.data.archive
+    window.OTCSF.addArchive @archive
+
+  _archiveReady: (event) =>
+    @archive = event.data.archive
+    window.OTCSF.archiveReady @archive
 
   _sessionConnected: =>
     console.log 'Session Connected'

@@ -70,8 +70,7 @@
 
   .publisher {
     bottom: 50%;
-    right: 0;
-    height: 16.7%;
+    right: 10px;
     width: 25%;
     z-index: 200;
   }
@@ -113,6 +112,7 @@ p.small {
   height: 40%;
   margin-top: 75%;
   padding: 0 10px;
+  display: none;
 
   .history {
     height: 140px;
@@ -128,7 +128,7 @@ p.small {
         margin-top: 10px;
         border: 1px solid black;
         border-radius: 5px;
-        background: whitesmoke;
+        background: #eee;
         width: 310px;
         float: left;
         font-weight: bold;

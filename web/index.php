@@ -6,6 +6,8 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 use \Slim\Slim;
 use \OpenTok\OpenTok;
+use \OpenTok\Role;
+use \OpenTok\MediaMode;
 use \werx\Config\Providers\ArrayProvider;
 use \werx\Config\Container;
 use \Predis\Response\ErrorInterface as RedisErrorInterface;
@@ -48,7 +50,9 @@ $opentok = new OpenTok($config->opentok('key'), $config->opentok('secret'));
  * -----------------------------------------------------------------------------------------------*/
 $redis = new \Predis\Client($config->redis(), array('prefix' => $config->redis('prefix')));
 define('PREFIX_HELP_SESSION_KEY', 'helpsession:');
+define('PREFIX_ARCHIVE_KEY', 'archive:');
 define('HELP_QUEUE_KEY', 'helpqueue');
+define('ARCHIVE_QUEUE_KEY', 'archivequeue');
 
 /* ------------------------------------------------------------------------------------------------
  * Routing
@@ -88,11 +92,11 @@ $app->post('/help/session', function () use ($app, $opentok, $redis, $config) {
         return;
     }
 
-    $session = $opentok->createSession();
+    $session = $opentok->createSession(array( 'mediaMode' => MediaMode::ROUTED ));
     $responseData = array(
         'apiKey' => $config->opentok('key'),
         'sessionId' => $session->getSessionId(),
-        'token' => $session->generateToken()
+        'token' => $session->generateToken(array('role' => Role::MODERATOR))
     );
 
     // Save the help session details
@@ -192,7 +196,7 @@ $app->delete('/help/queue', function () use ($app, $redis, $opentok, $config) {
         $responseData = array(
             'apiKey' => $config->opentok('key'),
             'sessionId' => $helpSessionData['sessionId'],
-            'token' => $opentok->generateToken($helpSessionData['sessionId']),
+            'token' => $opentok->generateToken($helpSessionData['sessionId'], array('role' => Role::MODERATOR)),
             'customerName' => $helpSessionData['customerName']
         );
 
@@ -229,7 +233,61 @@ $app->delete('/help/queue/:queueId', function ($queueId) use ($app, $redis) {
     $app->response->setStatus(204);
 });
 
+// Creates a new archive associated to the given session
+//
+//    Request: (URL encoded)
+//    *  `session_id`: The session which will own the archive
+//    *  `name`: The name given to the archive
+//
+//    Response: (JSON encoded)
+//    *  `archive`: A JSON representation of the archive object created
+$app->get('/archive/start', function () use ($app, $opentok) {
 
+    $sessionId = $app->request->params('session_id');
+    $name = $app->request->params('name');
+
+    $archive = $opentok->startArchive($sessionId, $name);
+
+    $app->response->headers->set('Content-Type', 'application/json');
+    $app->response->setBody(json_encode($archive->toJson()));
+});
+
+// Stops an archive associated to the given session
+//
+//    Request: (URL encoded)
+//    *  `archiveId`: The archive that wants to be stopped
+//
+//    Response: (JSON encoded)
+//    *  `archive`: A JSON representation of the archive object
+$app->get('/archive/stop/:archiveId', function($archiveId) use ($app, $opentok) {
+    $archive = $opentok->stopArchive($archiveId);
+    $app->response->headers->set('Content-Type', 'application/json');
+    $app->response->setBody(json_encode($archive->toJson()));
+});
+
+// Deletes an existing archive
+//
+//    Request: (URL encoded)
+//    *  `archiveId`: The archive that wants to be deleted
+//
+$app->delete('/archive/:archiveId', function($archiveId) use ($app, $opentok) {
+    $opentok->deleteArchive($archiveId);
+    $app->response->setStatus(204);
+});
+
+// Retrieves an archive
+//
+//    Request: (URL encoded)
+//    *  `archiveId`: The archive that wants to be deleted
+//
+//    Response: (JSON encoded)
+//    *  `archive`: A JSON representation of the archive object
+$app->get('/archive/:archiveId', function($archiveId) use ($app, $opentok) {
+    $archive = $opentok->getArchive($archiveId);
+
+    $app->response->headers->set('Content-Type', 'application/json');
+    $app->response->setBody(json_encode($archive->toJson()));
+});
 
 /* ------------------------------------------------------------------------------------------------
  * Application Start

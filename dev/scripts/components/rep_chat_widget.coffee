@@ -20,8 +20,12 @@ class RepServicePanel extends EventEmitter2
     @$publisher = @$panel.find ".publisher"
     @$subscriber = @$panel.find ".subscriber"
     @$endCall = @$panel.find ".end-call"
+    @$startArchive = @$panel.find ".btn-record"
+    @$stopArchive = @$panel.find ".btn-record-stop"
     @$customerName = @$panel.find ".customer-name"
-    @$messageLog = @$panel.find ".history"
+    @$dragChat = @$panel.find "#chat-collapse"
+    @$textChat = @$panel.find ".text-chat"
+    @$messageLog = @$panel.find ".messages"
     @$messageText = @$panel.find ".message-text"
     @$sendButton = @$panel.find ".btn-send"
     @$chatWrap = @$panel.find "#chat-opts"
@@ -35,6 +39,8 @@ class RepServicePanel extends EventEmitter2
       .on('accessDenied', this.publisherDenied, this)
 
     @$endCall.on "click", this.endCall
+    @$startArchive.on "click", this.startArchive
+    @$stopArchive.on "click", this.stopArchive
 
     console.log 'RepServicePanel constructor called'
 
@@ -83,6 +89,48 @@ class RepServicePanel extends EventEmitter2
 
     @$sendButton.on 'click', @sendMessage
     @$messageText.on 'keyup', @sendMessageOnEnter
+    @$startArchive.show()
+    @$stopArchive.hide()
+    @enableTextChat()
+
+  enableTextChat: =>
+    @$textChat.show()
+    @$dragChat.draggable
+      snap: '.container'
+      snapMode: 'inner'
+      snapTolerance: 10
+
+  startArchive: =>
+    @$startArchive.hide()
+    $.get "/archive/start", { session_id: @session.sessionId, name: "Portfolio Review" }, (archive) =>
+      @archive = archive
+      @$stopArchive.show()
+      window.OTCSF.addArchive archive
+      @signalArchiveMessage archive, "archiveAdded"
+
+  stopArchive: =>
+    @$stopArchive.hide()
+    archiveId = @archive.id
+    $.get "/archive/stop/#{archiveId}", (response) =>
+      @$startArchive.show()
+      setTimeout @askArchiveReady, 3000
+
+  askArchiveReady: =>
+    $.get "/archive/#{@archive.id}", (archive) =>
+      console.log archive
+      @archive = undefined
+      window.OTCSF.archiveReady archive
+      @signalArchiveMessage archive, "archiveReady"
+
+  signalArchiveMessage: (archive, type) =>
+    @session.signal {
+      type: type
+      data:
+        archive: archive
+    }, (error) ->
+      if !error
+        console.log "Error signaling #{type}", error
+
 
   renderCustomer: (customerData) =>
     @$customerName.text customerData.customerName
@@ -155,7 +203,7 @@ class RepServicePanel extends EventEmitter2
   messageReceived: (event) =>
     mine = event.from.connectionId == @session.connection.connectionId
     @_renderNewMessage event.data, mine
-    @$messageLog.scrollTop @$messageLog[0].scrollHeight
+    @$textChat.scrollTop @$textChat[0].scrollHeight
     return
 
   waitForCustomerExpired: =>
@@ -168,6 +216,7 @@ class RepServicePanel extends EventEmitter2
     @$chatWrap.hide()
 
     @$endCall.hide()
+    @$textChat.hide()
 
   endCall: =>
     if @connected
@@ -176,6 +225,7 @@ class RepServicePanel extends EventEmitter2
     else
       @clearCustomer()
     @stopTimer()
+    @stopArchive()
 
   publisherAllowed: =>
     @getCustomer()
@@ -185,7 +235,8 @@ class RepServicePanel extends EventEmitter2
 
   _renderNewMessage: (data, mine) ->
     from = if mine then 'You' else data.from
-    template = '<div class="message"><div class="from">' + from + '</div><div class="msg-body">' + data.text + '</div></div>'
+    klass = if mine then 'from-me' else 'from-others'
+    template = '<li class="' + klass + '"><label>' + data.from + ':</label><p>' + data.text + '</p></li>'
     @$messageLog.append template
     return
 
@@ -195,3 +246,10 @@ TBB.RepChatWidgetComponent = Ember.Component.extend
     repName = "Scott"
     serviceProvider = new RepServicePanel('#service-provider', repName)
     serviceProvider.start()
+  actions:
+    toggleChat: =>
+      $(".btn-chat").toggleClass("pressed")
+      if $(".btn-chat").hasClass("pressed")
+        $("#chat-collapse").show()
+      else
+        $("#chat-collapse").hide()

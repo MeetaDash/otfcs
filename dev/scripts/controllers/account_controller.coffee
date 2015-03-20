@@ -109,8 +109,12 @@ TBB.AccountController = Em.ObjectController.extend
       @set 'archivePending', true
     window.OTCSF.archiveReady = (data) =>
       archives = @get('archives').toArray()
-      archives[0].url = data.url
-      archives[0].duration = data.duration
+      archive = @get('archives').objectAt(0)
+      archive.url = data.url
+      Em.set archive, "url", data.url
+      Em.set archive, "duration", data.duration
+      Em.set archive, "title", data.name
+      archives[0] = archive
       @set 'archives', archives
       @set 'archivePending', false
   ).observes('model')
