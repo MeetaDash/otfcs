@@ -21,7 +21,8 @@ class RepServicePanel extends EventEmitter2
     @$subscriber = @$panel.find ".subscriber"
     @$endCall = @$panel.find ".end-call"
     @$customerName = @$panel.find ".customer-name"
-    @$messageLog = @$panel.find ".history"
+    @$textChat = @$panel.find ".text-chat"
+    @$messageLog = @$panel.find ".messages"
     @$messageText = @$panel.find ".message-text"
     @$sendButton = @$panel.find ".btn-send"
     @$chatWrap = @$panel.find "#chat-opts"
@@ -83,6 +84,7 @@ class RepServicePanel extends EventEmitter2
 
     @$sendButton.on 'click', @sendMessage
     @$messageText.on 'keyup', @sendMessageOnEnter
+    @$textChat.show()
 
   renderCustomer: (customerData) =>
     @$customerName.text customerData.customerName
@@ -155,7 +157,7 @@ class RepServicePanel extends EventEmitter2
   messageReceived: (event) =>
     mine = event.from.connectionId == @session.connection.connectionId
     @_renderNewMessage event.data, mine
-    @$messageLog.scrollTop @$messageLog[0].scrollHeight
+    @$textChat.scrollTop @$textChat[0].scrollHeight
     return
 
   waitForCustomerExpired: =>
@@ -168,6 +170,7 @@ class RepServicePanel extends EventEmitter2
     @$chatWrap.hide()
 
     @$endCall.hide()
+    @$textChat.hide()
 
   endCall: =>
     if @connected
@@ -185,7 +188,8 @@ class RepServicePanel extends EventEmitter2
 
   _renderNewMessage: (data, mine) ->
     from = if mine then 'You' else data.from
-    template = '<div class="message"><div class="from">' + from + '</div><div class="msg-body">' + data.text + '</div></div>'
+    klass = if mine then 'from-me' else 'from-others'
+    template = '<li class="' + klass + '"><label>' + data.from + ':</label><p>' + data.text + '</p></li>'
     @$messageLog.append template
     return
 

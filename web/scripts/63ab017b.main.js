@@ -378,7 +378,8 @@
       this.$subscriber = this.$panel.find(".subscriber");
       this.$endCall = this.$panel.find(".end-call");
       this.$customerName = this.$panel.find(".customer-name");
-      this.$messageLog = this.$panel.find(".history");
+      this.$textChat = this.$panel.find(".text-chat");
+      this.$messageLog = this.$panel.find(".messages");
       this.$messageText = this.$panel.find(".message-text");
       this.$sendButton = this.$panel.find(".btn-send");
       this.$chatWrap = this.$panel.find("#chat-opts");
@@ -444,7 +445,8 @@
         }
       });
       this.$sendButton.on('click', this.sendMessage);
-      return this.$messageText.on('keyup', this.sendMessageOnEnter);
+      this.$messageText.on('keyup', this.sendMessageOnEnter);
+      return this.$textChat.show();
     };
 
     RepServicePanel.prototype.renderCustomer = function(customerData) {
@@ -536,7 +538,7 @@
       var mine;
       mine = event.from.connectionId === this.session.connection.connectionId;
       this._renderNewMessage(event.data, mine);
-      this.$messageLog.scrollTop(this.$messageLog[0].scrollHeight);
+      this.$textChat.scrollTop(this.$textChat[0].scrollHeight);
     };
 
     RepServicePanel.prototype.waitForCustomerExpired = function() {
@@ -549,7 +551,8 @@
     RepServicePanel.prototype.clearCustomer = function() {
       this.$customerName.text('');
       this.$chatWrap.hide();
-      return this.$endCall.hide();
+      this.$endCall.hide();
+      return this.$textChat.hide();
     };
 
     RepServicePanel.prototype.endCall = function() {
@@ -569,9 +572,10 @@
     RepServicePanel.prototype.publisherDenied = function() {};
 
     RepServicePanel.prototype._renderNewMessage = function(data, mine) {
-      var from, template;
+      var from, klass, template;
       from = mine ? 'You' : data.from;
-      template = '<div class="message"><div class="from">' + from + '</div><div class="msg-body">' + data.text + '</div></div>';
+      klass = mine ? 'from-me' : 'from-others';
+      template = '<li class="' + klass + '"><label>' + data.from + ':</label><p>' + data.text + '</p></li>';
       this.$messageLog.append(template);
     };
 
