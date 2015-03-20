@@ -19,6 +19,37 @@
 }
 
 .rep {
+  .cw-actions{
+    background-color: #363636;
+    text-align: center;
+    padding-right: 0;
+    padding-left: 0;
+    margin: 0 15px;
+    width: 295px;
+
+    .btn{
+      width: auto;
+      height: 40px;
+    }
+
+    .btn-record{
+      float: left;
+      color: white;
+      width: 56px;
+    }
+
+    .end-call{
+      float: right;
+      border-radius: 0;
+    }
+
+    .btn-chat{
+      float: right;
+      background-color: #363636;
+      border-left: solid 1px #565656;
+    }
+  }
+
   .publisher {
     bottom: 10px;
     right: 10px;
