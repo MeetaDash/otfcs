@@ -8,6 +8,17 @@
 .subscriber,
 .publisher {
   position: absolute;
+
+  .OT_publisher{
+    overflow: visible !important;
+    .OT_archiving-on, .OT_archiving-off{
+      margin-left: -210px;
+
+      .OT_archiving-light-box {
+        border-radius: 100%;
+      }
+    }
+  }
 }
 
 .subscriber {
@@ -36,6 +47,13 @@
       float: left;
       color: white;
       width: 56px;
+      display: none;
+    }
+
+    .btn-record-stop{
+      float: left;
+      display: none;
+      padding: 0;
     }
 
     .end-call{
@@ -47,6 +65,14 @@
       float: right;
       background-color: #363636;
       border-left: solid 1px #565656;
+    }
+
+    .red-square{
+      margin: 12px;
+      background: #d9534f;
+      height: 16px;
+      width: 16px;
+      -webkit-animation: OT_pulse 1.3s ease-in;
     }
   }
 
