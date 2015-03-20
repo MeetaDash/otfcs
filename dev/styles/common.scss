@@ -1,0 +1,62 @@
+/* Buttons */
+.btn {
+  width: 90px;
+}
+.btn-large {
+  width: 200px;
+}
+.btn-danger {
+  color: white;
+  border-color: #c1160c;
+  background-color: #c1160c;
+}
+
+.btn-send {
+  color: white;
+  background-color: #0c0a0d;
+  &:hover {
+    color: white;
+    background-color: rgba(51, 51, 51, 0.82);
+  }
+}
+
+.OT_name {
+  text-align: left;
+}
+
+.publisher{
+  .OT_publisher {
+    background-color: transparent;
+    border-radius: 100% !important;
+    video{
+      width: 100% !important;
+      left: 0 !important;
+      height: 100% !important;
+      border-radius: 100% !important;
+    }
+  }
+}
+
+.on-queue{
+  .publisher{
+    .OT_publisher {
+      background-color: #000;
+    }
+  }
+}
+
+.publisher{
+  .OT_widget-container {
+    background-color: transparent;
+  }
+
+  .OT_bar.OT_edge-bar-item.OT_mode-auto{
+    border-radius: 100%;
+  }
+}
+
+.black-overlay {
+  input {
+    color: black;
+  }
+}
