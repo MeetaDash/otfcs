@@ -24,6 +24,8 @@
       this._streamCreated = __bind(this._streamCreated, this);
       this._sessionDisconnected = __bind(this._sessionDisconnected, this);
       this._sessionConnected = __bind(this._sessionConnected, this);
+      this._archiveReady = __bind(this._archiveReady, this);
+      this._archiveAdded = __bind(this._archiveAdded, this);
       this.close = __bind(this.close, this);
       this.sendMessageOnEnter = __bind(this.sendMessageOnEnter, this);
       this.sendMessage = __bind(this.sendMessage, this);
@@ -64,6 +66,8 @@
       this.session.on("streamCreated", this._streamCreated, this);
       this.session.on("streamDestroyed", this._streamDestroyed, this);
       this.session.on("signal:chat", this._messageReceived, this);
+      this.session.on("signal:archiveAdded", this._archiveAdded, this);
+      this.session.on("signal:archiveReady", this._archiveReady, this);
       this.publisher = OT.initPublisher(this.$publisher[0], this._videoProperties);
       this.publisher.on("accessAllowed", this._publisherAllowed, this.on("accessDenied", this._publisherDenied, this));
       this.$closeButton.on('click', this.close.bind(this));
@@ -103,6 +107,16 @@
       } else {
         return this._cleanUp();
       }
+    };
+
+    ServicePanel.prototype._archiveAdded = function(event) {
+      this.archive = event.data.archive;
+      return window.OTCSF.addArchive(this.archive);
+    };
+
+    ServicePanel.prototype._archiveReady = function(event) {
+      this.archive = event.data.archive;
+      return window.OTCSF.archiveReady(this.archive);
     };
 
     ServicePanel.prototype._sessionConnected = function() {
@@ -332,7 +346,8 @@
   var RepServicePanel,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    _this = this;
 
   RepServicePanel = (function(_super) {
     __extends(RepServicePanel, _super);
@@ -353,6 +368,11 @@
       this.sessionDisconnected = __bind(this.sessionDisconnected, this);
       this.sessionConnected = __bind(this.sessionConnected, this);
       this.renderCustomer = __bind(this.renderCustomer, this);
+      this.signalArchiveMessage = __bind(this.signalArchiveMessage, this);
+      this.askArchiveReady = __bind(this.askArchiveReady, this);
+      this.stopArchive = __bind(this.stopArchive, this);
+      this.startArchive = __bind(this.startArchive, this);
+      this.enableTextChat = __bind(this.enableTextChat, this);
       this.beginCall = __bind(this.beginCall, this);
       this.getCustomer = __bind(this.getCustomer, this);
       this.publisherConfig = __bind(this.publisherConfig, this);
@@ -377,7 +397,10 @@
       this.$publisher = this.$panel.find(".publisher");
       this.$subscriber = this.$panel.find(".subscriber");
       this.$endCall = this.$panel.find(".end-call");
+      this.$startArchive = this.$panel.find(".btn-record");
+      this.$stopArchive = this.$panel.find(".btn-record-stop");
       this.$customerName = this.$panel.find(".customer-name");
+      this.$dragChat = this.$panel.find("#chat-collapse");
       this.$textChat = this.$panel.find(".text-chat");
       this.$messageLog = this.$panel.find(".messages");
       this.$messageText = this.$panel.find(".message-text");
@@ -389,6 +412,8 @@
       this.publisher = OT.initPublisher(config.el, config.props);
       this.publisher.on('accessAllowed', this.publisherAllowed, this).on('accessDenied', this.publisherDenied, this);
       this.$endCall.on("click", this.endCall);
+      this.$startArchive.on("click", this.startArchive);
+      this.$stopArchive.on("click", this.stopArchive);
       console.log('RepServicePanel constructor called');
     }
 
@@ -446,7 +471,66 @@
       });
       this.$sendButton.on('click', this.sendMessage);
       this.$messageText.on('keyup', this.sendMessageOnEnter);
-      return this.$textChat.show();
+      this.$startArchive.show();
+      this.$stopArchive.hide();
+      return this.enableTextChat();
+    };
+
+    RepServicePanel.prototype.enableTextChat = function() {
+      this.$textChat.show();
+      return this.$dragChat.draggable({
+        snap: '.container',
+        snapMode: 'inner',
+        snapTolerance: 10
+      });
+    };
+
+    RepServicePanel.prototype.startArchive = function() {
+      var _this = this;
+      this.$startArchive.hide();
+      return $.get("/archive/start", {
+        session_id: this.session.sessionId,
+        name: "Portfolio Review"
+      }, function(archive) {
+        _this.archive = archive;
+        _this.$stopArchive.show();
+        window.OTCSF.addArchive(archive);
+        return _this.signalArchiveMessage(archive, "archiveAdded");
+      });
+    };
+
+    RepServicePanel.prototype.stopArchive = function() {
+      var archiveId,
+        _this = this;
+      this.$stopArchive.hide();
+      archiveId = this.archive.id;
+      return $.get("/archive/stop/" + archiveId, function(response) {
+        _this.$startArchive.show();
+        return setTimeout(_this.askArchiveReady, 3000);
+      });
+    };
+
+    RepServicePanel.prototype.askArchiveReady = function() {
+      var _this = this;
+      return $.get("/archive/" + this.archive.id, function(archive) {
+        console.log(archive);
+        _this.archive = void 0;
+        window.OTCSF.archiveReady(archive);
+        return _this.signalArchiveMessage(archive, "archiveReady");
+      });
+    };
+
+    RepServicePanel.prototype.signalArchiveMessage = function(archive, type) {
+      return this.session.signal({
+        type: type,
+        data: {
+          archive: archive
+        }
+      }, function(error) {
+        if (!error) {
+          return console.log("Error signaling " + type, error);
+        }
+      });
     };
 
     RepServicePanel.prototype.renderCustomer = function(customerData) {
@@ -562,7 +646,8 @@
       } else {
         this.clearCustomer();
       }
-      return this.stopTimer();
+      this.stopTimer();
+      return this.stopArchive();
     };
 
     RepServicePanel.prototype.publisherAllowed = function() {
@@ -590,6 +675,16 @@
       repName = "Scott";
       serviceProvider = new RepServicePanel('#service-provider', repName);
       return serviceProvider.start();
+    },
+    actions: {
+      toggleChat: function() {
+        $(".btn-chat").toggleClass("pressed");
+        if ($(".btn-chat").hasClass("pressed")) {
+          return $("#chat-collapse").show();
+        } else {
+          return $("#chat-collapse").hide();
+        }
+      }
     }
   });
 
@@ -765,10 +860,14 @@
         return _this.set('archivePending', true);
       };
       return window.OTCSF.archiveReady = function(data) {
-        var archives;
+        var archive, archives;
         archives = _this.get('archives').toArray();
-        archives[0].url = data.url;
-        archives[0].duration = data.duration;
+        archive = _this.get('archives').objectAt(0);
+        archive.url = data.url;
+        Em.set(archive, "url", data.url);
+        Em.set(archive, "duration", data.duration);
+        Em.set(archive, "title", data.name);
+        archives[0] = archive;
         _this.set('archives', archives);
         return _this.set('archivePending', false);
       };
@@ -1167,10 +1266,14 @@
         return _this.set('archivePending', true);
       };
       return window.OTCSF.archiveReady = function(data) {
-        var archives;
+        var archive, archives;
         archives = _this.get('archives').toArray();
-        archives[0].url = data.url;
-        archives[0].duration = data.duration;
+        archive = _this.get('archives').objectAt(0);
+        archive.url = data.url;
+        Em.set(archive, "url", data.url);
+        Em.set(archive, "duration", data.duration);
+        Em.set(archive, "title", data.name);
+        archives[0] = archive;
         _this.set('archives', archives);
         return _this.set('archivePending', false);
       };
