@@ -128,7 +128,7 @@ class RepServicePanel extends EventEmitter2
       data:
         archive: archive
     }, (error) ->
-      if !error
+      if error
         console.log "Error signaling #{type}", error
 
 
