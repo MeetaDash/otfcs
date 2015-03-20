@@ -30,6 +30,14 @@
 }
 
 .rep {
+  .rep-container .center-column .portfolio-review-image {
+    .btn-chat {
+      img {
+        width: 30px;
+      }
+    }
+  }
+  
   .cw-actions{
     background-color: #363636;
     text-align: center;
@@ -69,10 +77,17 @@
       background-color: #363636;
       border-left: solid 1px #565656;
       border-radius: 0;
+      width: 56px;
+      padding: 0;
 
       &.pressed{
         background-color: #d8d8d8;
         border-left: solid 1px #d8d8d8;
+      }
+
+      img{
+        width: 30px;
+        margin-top: 4px;
       }
     }
 
