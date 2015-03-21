@@ -99,12 +99,17 @@
     color: white;
     width: 40px;
     display: none;
+    padding: 3px 6px;
+    background: rgb(115, 194, 115);
+    border-radius: 0;
   }
 
   .btn-record-stop{
     float: left;
     display: none;
     padding: 0;
+    background: #D8DEE4; /*#D9534F*/;
+    border-radius: 0;
   }
 
   .end-call{
@@ -155,6 +160,14 @@
   .red-square{
     margin: 12px;
     background: #d9534f;
+    height: 16px;
+    width: 16px;
+    -webkit-animation: OT_pulse 1.3s ease-in;
+  }
+
+  .black-square{
+    margin: 12px;
+    background: #363636;
     height: 16px;
     width: 16px;
     -webkit-animation: OT_pulse 1.3s ease-in;
