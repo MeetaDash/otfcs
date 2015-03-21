@@ -542,14 +542,22 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', stack1, hashContexts, hashTypes, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div id=\"service-panel\" ");
+  data.buffer.push("<div id=\"main-panel\">\n  <div id=\"service-panel\" ");
   hashContexts = {'class': depth0};
   hashTypes = {'class': "STRING"};
   options = {hash:{
     'class': (":chat-widget shouldChatStick:stick :video-holder :on-queue :customer")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || depth0['bind-attr']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push(">\n    <div class=\"subscriber\"></div>\n    <div class=\"publisher\"></div>\n    <div class=\"text-chat\">\n      <div class=\"history\"></div>\n      <div class=\"new-message\">\n        <input type=\"text\" class=\"form-control message-text\" name=\"new-message\" placeholder=\"Send a text\">\n        <input type=\"button\" class=\"btn btn-send\" name=\"send\" value=\"Send\">\n      </div>\n    </div>\n    <div class=\"bottom-bar\">\n        <button type=\"button\" class=\"btn btn-large btn-danger close-button\">Cancel call</button>\n    </div>\n    <div class=\"waiting\">\n        <p class=\"hardware-access\">Please allow access to your camera and mic.</p>\n        <div class=\"representative\">\n          <p>In the queue</p>\n          <p class=\"big\">2 min</p>\n          <p class=\"small\">Aprox wait</p>\n        </div>\n    </div>\n</div>\n");
+  data.buffer.push(">\n      <div class=\"subscriber\"></div>\n      <div class=\"publisher\"></div>\n\n      <div class=\"col-md-12 cw-actions\">\n        <a class=\"btn btn-record\" title=\"Start Recording\"><img src=\"/images/rec.png\"/></a>\n        <a class=\"btn btn-record-stop\" title=\"Stop Recording\"><div class=\"black-square\"></div></a>\n        <a class=\"btn btn-chat\"><img src=\"/images/icon_Chat.png\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleChat", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("></img></a>\n        <a class=\"btn btn-danger end-call\">End Call</a>\n      </div>\n\n\n      <div id=\"text-panel\">\n        <div id=\"chat-collapse\" class=\"panel panel-default\">\n            <div class=\"panel-heading\">\n              <h5>Text chat</h5>\n              <a ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleChat", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"floatRight\">&times;</a>\n            </div>\n            <div class=\"panel-body\">\n                <div class=\"text-chat\">\n                  <ul class=\"messages\"></ul>\n                </div>\n            </div>\n            <div class=\"new-message\">\n              <input type=\"text\" class=\"form-control message-text\" name=\"new-message\" placeholder=\"Send a text\">\n            </div>\n        </div>\n      </div>\n\n\n      <div class=\"bottom-bar\">\n          <button type=\"button\" class=\"btn btn-large btn-danger close-button\">Cancel call</button>\n      </div>\n      <div class=\"waiting\">\n          <p class=\"hardware-access\">Please allow access to your camera and mic.</p>\n          <div class=\"representative\">\n            <p>In the queue</p>\n            <p class=\"big\">2 min</p>\n            <p class=\"small\">Aprox wait</p>\n          </div>\n      </div>\n  </div>\n</div>\n");
   return buffer;
   
 });
@@ -612,15 +620,15 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div id=\"service-provider\" class=\"rep\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <div class=\"panel panel-default\">\n                <div class=\"panel-body video-holder\">\n                    <div class=\"subscriber\" ></div>\n                    <div class=\"publisher\" ></div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <div id=\"chat-opts\" class=\"row\" style=\"display: none;\">\n        <div class=\"col-md-12 cw-actions\">\n          <a class=\"btn btn-record\" title=\"Start Recording\"><img src=\"/images/recordpressed.png\"/></a>\n          <a class=\"btn btn-record-stop\" title=\"Stop Recording\"><div class=\"red-square\"></div></a>\n          <a class=\"btn btn-chat\"><img src=\"/images/icon_Chat.png\" ");
+  data.buffer.push("<div id=\"service-provider\" class=\"rep\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <div class=\"panel panel-default\">\n                <div class=\"panel-body video-holder\">\n                    <div class=\"subscriber\" ></div>\n                    <div class=\"publisher\" ></div>\n                    <div id=\"chat-opts\" class=\"row\" style=\"display: none;\">\n                        <div class=\"col-md-12 cw-actions\">\n                          <a class=\"btn btn-record\" title=\"Start Recording\"><img src=\"/images/rec.png\"/></a>\n                          <a class=\"btn btn-record-stop\" title=\"Stop Recording\"><div class=\"black-square\"></div></a>\n                          <a class=\"btn btn-chat\"><img src=\"/images/icon_Chat.png\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleChat", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("></img></a>\n          <a class=\"btn btn-danger end-call\">End Call</a>\n        </div>\n        <div class=\"col-md-12 noHeight shiftRight\">\n            <div id=\"chat-collapse\" class=\"panel panel-default collapse\">\n                <div class=\"panel-heading\">\n                  <h5>Text chat</h5>\n                  <a ");
+  data.buffer.push("></img></a>\n                          <a class=\"btn btn-danger end-call\">End Call</a>\n                        </div>\n                        <div class=\"col-md-12 noHeight shiftRight\">\n                            <div id=\"chat-collapse\" class=\"panel panel-default collapse\">\n                                <div class=\"panel-heading\">\n                                  <h5>Text chat</h5>\n                                  <a ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleChat", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" class=\"floatRight\">&times;</a>\n                </div>\n                <div class=\"panel-body\">\n                    <div class=\"dl-horizontal text-chat\">\n                      <ul class=\"messages\"></ul>\n                    </div>\n                    <div class=\"new-message\">\n                      <input type=\"text\" class=\"form-control message-text\" name=\"new-message\" placeholder=\"Send a text\">\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n");
+  data.buffer.push(" class=\"floatRight\">&times;</a>\n                                </div>\n                                <div class=\"panel-body\">\n                                    <div class=\"dl-horizontal text-chat\">\n                                      <ul class=\"messages\"></ul>\n                                    </div>\n                                    <div class=\"new-message\">\n                                      <input type=\"text\" class=\"form-control message-text\" name=\"new-message\" placeholder=\"Send a text\">\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n\n</div>\n");
   return buffer;
   
 });

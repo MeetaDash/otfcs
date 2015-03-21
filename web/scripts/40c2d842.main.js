@@ -26,6 +26,10 @@
       this._sessionConnected = __bind(this._sessionConnected, this);
       this._archiveReady = __bind(this._archiveReady, this);
       this._archiveAdded = __bind(this._archiveAdded, this);
+      this.signalArchiveMessage = __bind(this.signalArchiveMessage, this);
+      this.askArchiveReady = __bind(this.askArchiveReady, this);
+      this.stopArchive = __bind(this.stopArchive, this);
+      this.startArchive = __bind(this.startArchive, this);
       this.close = __bind(this.close, this);
       this.sendMessageOnEnter = __bind(this.sendMessageOnEnter, this);
       this.sendMessage = __bind(this.sendMessage, this);
@@ -46,16 +50,23 @@
         }
       };
       this.connected = false;
-      this.$panel = $(panel);
+      this.$parent = $(panel);
+      this.$panel = this.$parent.find("#service-panel");
+      this.dragChat = this.$panel.find("#text-panel");
+      this.$textChat = this.$panel.find(".text-chat");
+      this.$actionsBar = this.$panel.find(".cw-actions");
       this.$publisher = this.$panel.find(".publisher");
       this.$subscriber = this.$panel.find('.subscriber');
-      this.$textChat = this.$panel.find('.text-chat');
       this.$waitingHardwareAccess = this.$panel.find('.waiting .hardware-access');
       this.$waitingRepresentative = this.$panel.find('.waiting .representative');
       this.$closeButton = this.$panel.find('.close-button');
-      this.$messageText = this.$textChat.find('.message-text');
-      this.$sendButton = this.$textChat.find('.btn-send');
-      this.$messageLog = this.$textChat.find('.history');
+      this.$endButton = this.$panel.find(".end-call");
+      this.$btnChat = this.$panel.find(".btn-chat");
+      this.$messageText = this.dragChat.find('.message-text');
+      this.$sendButton = this.dragChat.find('.btn-send');
+      this.$messageLog = this.dragChat.find('.messages');
+      this.$startArchive = this.$panel.find(".btn-record");
+      this.$stopArchive = this.$panel.find(".btn-record-stop");
       setTimeout(this.initialize, 0);
     }
 
@@ -71,22 +82,29 @@
       this.publisher = OT.initPublisher(this.$publisher[0], this._videoProperties);
       this.publisher.on("accessAllowed", this._publisherAllowed, this.on("accessDenied", this._publisherDenied, this));
       this.$closeButton.on('click', this.close.bind(this));
+      this.$endButton.on("click", this.close.bind(this));
       this.$panel.show();
       this.$publisher.children().not(':last').remove();
       this.$waitingHardwareAccess.show();
       this.$sendButton.on('click', this.sendMessage.bind(this));
       this.$messageText.on('keyup', this.sendMessageOnEnter.bind(this));
+      this.$startArchive.on("click", this.startArchive);
+      this.$stopArchive.on("click", this.stopArchive);
       return this.emit("open");
     };
 
     ServicePanel.prototype.sendMessage = function() {
-      var self;
+      var self, text;
       self = this;
+      text = this.$messageText.val();
+      if (!text) {
+        return;
+      }
       this.session.signal({
         type: 'chat',
         data: {
           from: this.customerName,
-          text: self.$messageText.val()
+          text: text
         }
       }, function(error) {
         if (!error) {
@@ -109,13 +127,63 @@
       }
     };
 
+    ServicePanel.prototype.startArchive = function() {
+      var _this = this;
+      this.$startArchive.hide();
+      return $.get("/archive/start", {
+        session_id: this.session.sessionId,
+        name: "Portfolio Review"
+      }, function(archive) {
+        _this.archive = archive;
+        _this.$stopArchive.show();
+        window.OTCSF.addArchive(archive);
+        return _this.signalArchiveMessage(archive, "archiveAdded");
+      });
+    };
+
+    ServicePanel.prototype.stopArchive = function() {
+      var archiveId,
+        _this = this;
+      this.$stopArchive.hide();
+      archiveId = this.archive.id;
+      return $.get("/archive/stop/" + archiveId, function(response) {
+        _this.$startArchive.show();
+        return setTimeout(_this.askArchiveReady, 3000);
+      });
+    };
+
+    ServicePanel.prototype.askArchiveReady = function() {
+      var _this = this;
+      return $.get("/archive/" + this.archive.id, function(archive) {
+        console.log(archive);
+        _this.archive = void 0;
+        window.OTCSF.archiveReady(archive);
+        return _this.signalArchiveMessage(archive, "archiveReady");
+      });
+    };
+
+    ServicePanel.prototype.signalArchiveMessage = function(archive, type) {
+      return this.session.signal({
+        type: type,
+        data: {
+          archive: archive
+        }
+      }, function(error) {
+        if (error) {
+          return console.log("Error signaling " + type, error);
+        }
+      });
+    };
+
     ServicePanel.prototype._archiveAdded = function(event) {
       this.archive = event.data.archive;
+      this.$startArchive.hide();
       return window.OTCSF.addArchive(this.archive);
     };
 
     ServicePanel.prototype._archiveReady = function(event) {
       this.archive = event.data.archive;
+      this.$startArchive.show();
       return window.OTCSF.archiveReady(this.archive);
     };
 
@@ -142,18 +210,18 @@
     };
 
     ServicePanel.prototype._streamCreated = function(event) {
-      console.log('Rep joins!!');
       if (!this.subscriber) {
         this.subscriber = this.session.subscribe(event.stream, this.$subscriber[0], this._videoProperties, function(err) {
           if (err && err.code === 1600) {
             console.log('An internal error occurred. Try subscribing to this stream again.');
           }
         });
-        this.$closeButton.text('End call');
+        this.$closeButton.hide();
+        this.$actionsBar.show();
         this.$waitingRepresentative.hide();
         this.$panel.removeClass('on-queue');
         this.$publisher.show();
-        this.$textChat.show();
+        this.$startArchive.show();
         this.queueId = void 0;
         window.onbeforeunload = void 0;
       }
@@ -166,16 +234,23 @@
     };
 
     ServicePanel.prototype._messageReceived = function(event) {
-      var mine;
+      var count, mine;
       mine = event.from.connectionId === this.session.connection.connectionId;
       this._renderNewMessage(event.data, mine);
-      this.$messageLog.scrollTop(this.$messageLog[0].scrollHeight);
+      this.$textChat.scrollTop(this.$textChat[0].scrollHeight);
+      if (this.$textChat.is(":visible")) {
+        this.$btnChat.removeAttr("ios-counter");
+      } else {
+        count = parseInt(this.$btnChat.attr("ios-counter")) || 0;
+        this.$btnChat.attr("ios-counter", count + 1);
+      }
     };
 
     ServicePanel.prototype._renderNewMessage = function(data, mine) {
-      var from, template;
+      var from, klass, template;
       from = mine ? 'You' : data.from;
-      template = '<div class="message"><div class="from">' + from + '</div><div class="msg-body">' + data.text + '</div></div>';
+      klass = mine ? 'from-me' : 'from-others';
+      template = '<li class="' + klass + '"><label>' + data.from + ':</label><p>' + data.text + '</p></li>';
       this.$messageLog.append(template);
     };
 
@@ -196,7 +271,7 @@
     ServicePanel.prototype._cleanUp = function() {
       this.$waitingHardwareAccess.hide();
       this.$waitingRepresentative.hide();
-      this.$textChat.hide();
+      this.dragChat.hide();
       this.$messageLog.html('');
       this.$closeButton.off().text('Cancel call');
       this.session.off();
@@ -244,24 +319,36 @@
       return _this.$subscriber = _this.panel.find(".subscriber");
     },
     didInsertElement: function() {
-      var customerName;
+      var config, customerName;
       $(window).on('scroll', $.proxy(_this.setYOffset, _this));
       customerName = 'Ian';
       $.post('/help/session', {
         customer_name: customerName
       }, 'json').done(function(config) {
         var servicePanel;
-        servicePanel = new ServicePanel("#service-panel", config, customerName);
+        servicePanel = new ServicePanel("#main-panel", config, customerName);
         return servicePanel.on("close", function() {
           servicePanel.removeAllListeners();
           return servicePanel = void 0;
         });
       });
-      return $('.chat-widget').draggable({
+      config = {
         snap: '.container',
         snapMode: 'inner',
         snapTolerance: 10
-      });
+      };
+      return $('#text-panel').draggable(config);
+    },
+    actions: {
+      toggleChat: function() {
+        $(".btn-chat").toggleClass("pressed");
+        if ($(".btn-chat").hasClass("pressed")) {
+          $("#text-panel").show();
+          return $(".btn-chat").removeAttr("ios-counter");
+        } else {
+          return $("#text-panel").hide();
+        }
+      }
     }
   });
 
@@ -353,6 +440,8 @@
     __extends(RepServicePanel, _super);
 
     function RepServicePanel(panel, representativeName) {
+      this._archiveReady = __bind(this._archiveReady, this);
+      this._archiveAdded = __bind(this._archiveAdded, this);
       this.publisherDenied = __bind(this.publisherDenied, this);
       this.publisherAllowed = __bind(this.publisherAllowed, this);
       this.endCall = __bind(this.endCall, this);
@@ -405,6 +494,7 @@
       this.$messageLog = this.$panel.find(".messages");
       this.$messageText = this.$panel.find(".message-text");
       this.$sendButton = this.$panel.find(".btn-send");
+      this.$btnChat = this.$panel.find(".btn-chat");
       this.$chatWrap = this.$panel.find("#chat-opts");
       this.repName = representativeName;
       this.dequeueData = '_METHOD=DELETE';
@@ -459,11 +549,13 @@
       this.renderCustomer(customerData);
       this.videoProperties.name = customerData.customerName;
       this.session = OT.initSession(customerData.apiKey, customerData.sessionId);
-      this.session.on('sessionConnected', this.sessionConnected);
-      this.session.on('sessionDisconnected', this.sessionDisconnected);
-      this.session.on('streamCreated', this.streamCreated);
-      this.session.on('streamDestroyed', this.streamDestroyed);
+      this.session.on("sessionConnected", this.sessionConnected);
+      this.session.on("sessionDisconnected", this.sessionDisconnected);
+      this.session.on("streamCreated", this.streamCreated);
+      this.session.on("streamDestroyed", this.streamDestroyed);
       this.session.on('signal:chat', this.messageReceived);
+      this.session.on("signal:archiveAdded", this._archiveAdded, this);
+      this.session.on("signal:archiveReady", this._archiveReady, this);
       this.session.connect(customerData.token, function(err) {
         if (err && err.code === 1006) {
           return console.log('Connecting to the session failed. Try connecting to this session again.');
@@ -527,7 +619,7 @@
           archive: archive
         }
       }, function(error) {
-        if (!error) {
+        if (error) {
           return console.log("Error signaling " + type, error);
         }
       });
@@ -596,14 +688,17 @@
     };
 
     RepServicePanel.prototype.sendMessage = function() {
-      var self;
-      console.log('send...');
+      var self, text;
       self = this;
+      text = this.$messageText.val();
+      if (!text) {
+        return;
+      }
       this.session.signal({
         type: 'chat',
         data: {
           from: this.repName,
-          text: self.$messageText.val()
+          text: text
         }
       }, function(error) {
         if (!error) {
@@ -619,10 +714,16 @@
     };
 
     RepServicePanel.prototype.messageReceived = function(event) {
-      var mine;
+      var count, mine;
       mine = event.from.connectionId === this.session.connection.connectionId;
       this._renderNewMessage(event.data, mine);
       this.$textChat.scrollTop(this.$textChat[0].scrollHeight);
+      if (this.$textChat.is(":visible")) {
+        this.$btnChat.removeAttr("ios-counter");
+      } else {
+        count = parseInt(this.$btnChat.attr("ios-counter")) || 0;
+        this.$btnChat.attr("ios-counter", count + 1);
+      }
     };
 
     RepServicePanel.prototype.waitForCustomerExpired = function() {
@@ -656,6 +757,18 @@
 
     RepServicePanel.prototype.publisherDenied = function() {};
 
+    RepServicePanel.prototype._archiveAdded = function(event) {
+      this.archive = event.data.archive;
+      this.$startArchive.hide();
+      return window.OTCSF.addArchive(this.archive);
+    };
+
+    RepServicePanel.prototype._archiveReady = function(event) {
+      this.archive = event.data.archive;
+      this.$startArchive.show();
+      return window.OTCSF.archiveReady(this.archive);
+    };
+
     RepServicePanel.prototype._renderNewMessage = function(data, mine) {
       var from, klass, template;
       from = mine ? 'You' : data.from;
@@ -680,7 +793,8 @@
       toggleChat: function() {
         $(".btn-chat").toggleClass("pressed");
         if ($(".btn-chat").hasClass("pressed")) {
-          return $("#chat-collapse").show();
+          $("#chat-collapse").show();
+          return $(".btn-chat").removeAttr("ios-counter");
         } else {
           return $("#chat-collapse").hide();
         }
