@@ -79,11 +79,13 @@ class RepServicePanel extends EventEmitter2
     @videoProperties.name = customerData.customerName
 
     @session = OT.initSession customerData.apiKey, customerData.sessionId
-    @session.on 'sessionConnected', @sessionConnected
-    @session.on 'sessionDisconnected', @sessionDisconnected
-    @session.on 'streamCreated', @streamCreated
-    @session.on 'streamDestroyed', @streamDestroyed
+    @session.on "sessionConnected", @sessionConnected
+    @session.on "sessionDisconnected", @sessionDisconnected
+    @session.on "streamCreated", @streamCreated
+    @session.on "streamDestroyed", @streamDestroyed
     @session.on 'signal:chat', @messageReceived
+    @session.on "signal:archiveAdded", this._archiveAdded, this
+    @session.on "signal:archiveReady", this._archiveReady, this
     @session.connect customerData.token, (err) ->
       if err && err.code == 1006
         console.log 'Connecting to the session failed. Try connecting to this session again.'
@@ -239,6 +241,16 @@ class RepServicePanel extends EventEmitter2
 
   publisherDenied: =>
     return
+
+  _archiveAdded: (event) =>
+    @archive = event.data.archive
+    @$startArchive.hide()
+    window.OTCSF.addArchive @archive
+
+  _archiveReady: (event) =>
+    @archive = event.data.archive
+    @$startArchive.show()
+    window.OTCSF.archiveReady @archive
 
   _renderNewMessage: (data, mine) ->
     from = if mine then 'You' else data.from

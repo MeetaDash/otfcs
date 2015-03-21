@@ -32,6 +32,9 @@ class ServicePanel extends EventEmitter2
     @$sendButton = @dragChat.find('.btn-send')
     @$messageLog = @dragChat.find('.messages')
 
+    @$startArchive = @$panel.find ".btn-record"
+    @$stopArchive = @$panel.find ".btn-record-stop"
+
     setTimeout @initialize, 0
 
   initialize: =>
@@ -55,6 +58,9 @@ class ServicePanel extends EventEmitter2
     @$waitingHardwareAccess.show()
     @$sendButton.on 'click', @sendMessage.bind(this)
     @$messageText.on 'keyup', @sendMessageOnEnter.bind(this)
+
+    @$startArchive.on "click", this.startArchive
+    @$stopArchive.on "click", this.stopArchive
 
     @emit "open"
 
@@ -84,12 +90,45 @@ class ServicePanel extends EventEmitter2
     else
       @_cleanUp()
 
+  startArchive: =>
+    @$startArchive.hide()
+    $.get "/archive/start", { session_id: @session.sessionId, name: "Portfolio Review" }, (archive) =>
+      @archive = archive
+      @$stopArchive.show()
+      window.OTCSF.addArchive archive
+      @signalArchiveMessage archive, "archiveAdded"
+
+  stopArchive: =>
+    @$stopArchive.hide()
+    archiveId = @archive.id
+    $.get "/archive/stop/#{archiveId}", (response) =>
+      @$startArchive.show()
+      setTimeout @askArchiveReady, 3000
+
+  askArchiveReady: =>
+    $.get "/archive/#{@archive.id}", (archive) =>
+      console.log archive
+      @archive = undefined
+      window.OTCSF.archiveReady archive
+      @signalArchiveMessage archive, "archiveReady"
+
+  signalArchiveMessage: (archive, type) =>
+    @session.signal {
+      type: type
+      data:
+        archive: archive
+    }, (error) ->
+      if error
+        console.log "Error signaling #{type}", error
+
   _archiveAdded: (event) =>
     @archive = event.data.archive
+    @$startArchive.hide()
     window.OTCSF.addArchive @archive
 
   _archiveReady: (event) =>
     @archive = event.data.archive
+    @$startArchive.show()
     window.OTCSF.archiveReady @archive
 
   _sessionConnected: =>
@@ -122,6 +161,7 @@ class ServicePanel extends EventEmitter2
       @$waitingRepresentative.hide()
       @$panel.removeClass 'on-queue'
       @$publisher.show()
+      @$startArchive.show()
       # Invalidate queueId because if the representative arrived,
       # that means customer has been dequeued
       @queueId = undefined
