@@ -16,16 +16,20 @@ class ServicePanel extends EventEmitter2
 
     @connected = false
 
-    @$panel = $(panel)
+    @$parent = $(panel)
+    @$panel = @$parent.find "#service-panel"
+    @dragChat = @$panel.find "#text-panel"
+    @$textChat = @$panel.find ".text-chat"
+    @$actionsBar = @$panel.find ".cw-actions"
     @$publisher = @$panel.find(".publisher")
     @$subscriber = @$panel.find('.subscriber')
-    @$textChat = @$panel.find('.text-chat')
     @$waitingHardwareAccess = @$panel.find('.waiting .hardware-access')
     @$waitingRepresentative = @$panel.find('.waiting .representative')
     @$closeButton = @$panel.find('.close-button')
-    @$messageText = @$textChat.find('.message-text')
-    @$sendButton = @$textChat.find('.btn-send')
-    @$messageLog = @$textChat.find('.history')
+    @$endButton = @$panel.find ".end-call"
+    @$messageText = @dragChat.find('.message-text')
+    @$sendButton = @dragChat.find('.btn-send')
+    @$messageLog = @dragChat.find('.messages')
 
     setTimeout @initialize, 0
 
@@ -44,6 +48,7 @@ class ServicePanel extends EventEmitter2
       .on "accessDenied", this._publisherDenied, this
 
     @$closeButton.on 'click', @close.bind(this)
+    @$endButton.on "click", @close.bind(this)
     @$panel.show()
     @$publisher.children().not(':last').remove()
     @$waitingHardwareAccess.show()
@@ -54,11 +59,13 @@ class ServicePanel extends EventEmitter2
 
   sendMessage: =>
     self = this
+    text = this.$messageText.val()
+    return unless !!text
     @session.signal {
       type: 'chat'
       data:
         from: @customerName
-        text: self.$messageText.val()
+        text: text
     }, (error) ->
       if !error
         self.$messageText.val ''
@@ -110,11 +117,11 @@ class ServicePanel extends EventEmitter2
           console.log 'An internal error occurred. Try subscribing to this stream again.'
         return
       )
-      @$closeButton.text 'End call'
+      @$closeButton.hide()
+      @$actionsBar.show()
       @$waitingRepresentative.hide()
       @$panel.removeClass 'on-queue'
       @$publisher.show()
-      @$textChat.show()
       # Invalidate queueId because if the representative arrived,
       # that means customer has been dequeued
       @queueId = undefined
@@ -130,12 +137,13 @@ class ServicePanel extends EventEmitter2
   _messageReceived: (event) =>
     mine = event.from.connectionId == @session.connection.connectionId
     @_renderNewMessage event.data, mine
-    @$messageLog.scrollTop @$messageLog[0].scrollHeight
+    @$textChat.scrollTop @$textChat[0].scrollHeight
     return
 
   _renderNewMessage: (data, mine) ->
     from = if mine then 'You' else data.from
-    template = '<div class="message"><div class="from">' + from + '</div><div class="msg-body">' + data.text + '</div></div>'
+    klass = if mine then 'from-me' else 'from-others'
+    template = '<li class="' + klass + '"><label>' + data.from + ':</label><p>' + data.text + '</p></li>'
     @$messageLog.append template
     return
 
@@ -155,7 +163,7 @@ class ServicePanel extends EventEmitter2
   _cleanUp: =>
     @$waitingHardwareAccess.hide()
     @$waitingRepresentative.hide()
-    @$textChat.hide()
+    @dragChat.hide()
     @$messageLog.html ''
     @$closeButton.off().text 'Cancel call'
     @session.off()
@@ -197,12 +205,21 @@ TBB.ChatWidgetComponent = Ember.Component.extend
     customerName = 'Ian'
     $.post('/help/session', { customer_name: customerName }, 'json')
       .done (config) =>
-        servicePanel = new ServicePanel("#service-panel", config, customerName)
+        servicePanel = new ServicePanel("#main-panel", config, customerName)
         servicePanel.on "close", ->
           servicePanel.removeAllListeners()
           servicePanel = undefined
 
-    $('.chat-widget').draggable
+    config =
       snap: '.container'
       snapMode: 'inner'
       snapTolerance: 10
+    $('#text-panel').draggable config
+
+  actions:
+    toggleChat: =>
+      $(".btn-chat").toggleClass("pressed")
+      if $(".btn-chat").hasClass("pressed")
+        $("#text-panel").show()
+      else
+        $("#text-panel").hide()

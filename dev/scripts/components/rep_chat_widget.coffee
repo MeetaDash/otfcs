@@ -182,13 +182,14 @@ class RepServicePanel extends EventEmitter2
     clearInterval(@timerId)
 
   sendMessage: =>
-    console.log('send...')
     self = this
+    text = this.$messageText.val()
+    return unless !!text
     @session.signal {
       type: 'chat'
       data:
         from: @repName
-        text: self.$messageText.val()
+        text: text
     }, (error) ->
       if !error
         self.$messageText.val ''
