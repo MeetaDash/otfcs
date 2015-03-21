@@ -195,6 +195,9 @@ p.small {
   .panel{
     .panel-heading{
       text-align: left;
+      a{
+        color: #000;
+      }
     }
     .panel-body{
       height: 323px;
@@ -204,7 +207,7 @@ p.small {
         left: 0;
 
         overflow: auto;
-        background-color: #d8d8d8;
+        background-color: white;
         margin-top: 0;
 
         ul{
@@ -224,7 +227,7 @@ p.small {
               margin-bottom: 30px;
 
               label{
-                color: #fff;
+                color: #777575;
                 margin-bottom: 10px;
                 display: inline-block;
                 width: 100%;

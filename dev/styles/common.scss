@@ -79,7 +79,7 @@
 
 
 .cw-actions{
-  background-color: #363636;
+  background-color: #F0F0F0;// #363636;
   text-align: center;
   padding-right: 0;
   padding-left: 0;
@@ -100,7 +100,7 @@
     width: 40px;
     display: none;
     padding: 3px 6px;
-    background: rgb(115, 194, 115);
+    background: #D8DEE4;
     border-radius: 0;
   }
 
@@ -108,7 +108,7 @@
     float: left;
     display: none;
     padding: 0;
-    background: #D8DEE4; /*#D9534F*/;
+    background: #D9534F;
     border-radius: 0;
   }
 
@@ -119,8 +119,8 @@
 
   .btn-chat{
     float: right;
-    background-color: #363636;
-    border-left: solid 1px #565656;
+    background-color: #A4A6A8; // #363636;
+    border-left: solid 1px #7A7C7E; //solid 1px #565656;
     border-radius: 0;
     width: 56px;
     padding: 0;
