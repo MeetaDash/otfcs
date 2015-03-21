@@ -27,6 +27,7 @@ class ServicePanel extends EventEmitter2
     @$waitingRepresentative = @$panel.find('.waiting .representative')
     @$closeButton = @$panel.find('.close-button')
     @$endButton = @$panel.find ".end-call"
+    @$btnChat = @$panel.find ".btn-chat"
     @$messageText = @dragChat.find('.message-text')
     @$sendButton = @dragChat.find('.btn-send')
     @$messageLog = @dragChat.find('.messages')
@@ -109,7 +110,6 @@ class ServicePanel extends EventEmitter2
 
   _streamCreated: (event) =>
     # The representative joins the session
-    console.log 'Rep joins!!'
     if not @subscriber
       @subscriber = @session.subscribe(event.stream, @$subscriber[0], @_videoProperties, (err) ->
         # Handle subscriber error
@@ -138,6 +138,11 @@ class ServicePanel extends EventEmitter2
     mine = event.from.connectionId == @session.connection.connectionId
     @_renderNewMessage event.data, mine
     @$textChat.scrollTop @$textChat[0].scrollHeight
+    if @$textChat.is(":visible")
+      @$btnChat.removeAttr("ios-counter")
+    else
+      count =parseInt(@$btnChat.attr("ios-counter")) || 0
+      @$btnChat.attr("ios-counter", count + 1)
     return
 
   _renderNewMessage: (data, mine) ->
@@ -221,5 +226,6 @@ TBB.ChatWidgetComponent = Ember.Component.extend
       $(".btn-chat").toggleClass("pressed")
       if $(".btn-chat").hasClass("pressed")
         $("#text-panel").show()
+        $(".btn-chat").removeAttr("ios-counter")
       else
         $("#text-panel").hide()

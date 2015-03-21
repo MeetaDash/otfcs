@@ -129,6 +129,27 @@
       width: 30px !important;
       margin-top: 4px;
     }
+
+    &[ios-counter]:after{
+      content: attr(ios-counter);
+      position: absolute;
+      top: -10px;
+      right: -14px;
+      padding: 3px 9px;
+      border: 2px solid white;
+      border-radius: 100px;
+      background: linear-gradient(top, #ff6969 0%, red 100%);
+      background: -webkit-linear-gradient(top, #ff6969 0%, red 100%);
+      background: -moz-linear-gradient(top, #ff6969 0%, red 100%);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.7) inset, 0 10px 0px rgba(255, 255, 255, 0.11) inset;
+      background-clip: padding-box;
+      font: bold 12px/18px "Helvetica Neue", sans-serif;
+      color: white;
+      text-decoration: none;
+      text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.6);
+      text-align: center;
+      z-index: 1005;
+    }
   }
 
   .red-square{

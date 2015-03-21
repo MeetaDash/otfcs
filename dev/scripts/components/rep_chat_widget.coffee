@@ -28,6 +28,7 @@ class RepServicePanel extends EventEmitter2
     @$messageLog = @$panel.find ".messages"
     @$messageText = @$panel.find ".message-text"
     @$sendButton = @$panel.find ".btn-send"
+    @$btnChat = @$panel.find ".btn-chat"
     @$chatWrap = @$panel.find "#chat-opts"
 
     @repName = representativeName
@@ -205,6 +206,11 @@ class RepServicePanel extends EventEmitter2
     mine = event.from.connectionId == @session.connection.connectionId
     @_renderNewMessage event.data, mine
     @$textChat.scrollTop @$textChat[0].scrollHeight
+    if @$textChat.is(":visible")
+      @$btnChat.removeAttr("ios-counter")
+    else
+      count = parseInt(@$btnChat.attr("ios-counter")) || 0
+      @$btnChat.attr("ios-counter", count + 1)
     return
 
   waitForCustomerExpired: =>
@@ -252,5 +258,6 @@ TBB.RepChatWidgetComponent = Ember.Component.extend
       $(".btn-chat").toggleClass("pressed")
       if $(".btn-chat").hasClass("pressed")
         $("#chat-collapse").show()
+        $(".btn-chat").removeAttr("ios-counter")
       else
         $("#chat-collapse").hide()
