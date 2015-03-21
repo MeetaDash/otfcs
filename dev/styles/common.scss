@@ -76,3 +76,66 @@
     color: black;
   }
 }
+
+
+.cw-actions{
+  background-color: #363636;
+  text-align: center;
+  padding-right: 0;
+  padding-left: 0;
+  margin: 0 15px;
+  width: 295px;
+
+  .btn{
+    width: auto;
+    height: 40px;
+    img{
+      width: 20px;
+    }
+  }
+
+  .btn-record{
+    float: left;
+    color: white;
+    width: 40px;
+    display: none;
+  }
+
+  .btn-record-stop{
+    float: left;
+    display: none;
+    padding: 0;
+  }
+
+  .end-call{
+    float: right;
+    border-radius: 0;
+  }
+
+  .btn-chat{
+    float: right;
+    background-color: #363636;
+    border-left: solid 1px #565656;
+    border-radius: 0;
+    width: 56px;
+    padding: 0;
+
+    &.pressed{
+      background-color: #d8d8d8;
+      border-left: solid 1px #d8d8d8;
+    }
+
+    img{
+      width: 30px !important;
+      margin-top: 4px;
+    }
+  }
+
+  .red-square{
+    margin: 12px;
+    background: #d9534f;
+    height: 16px;
+    width: 16px;
+    -webkit-animation: OT_pulse 1.3s ease-in;
+  }
+}

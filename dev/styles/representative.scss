@@ -18,6 +18,9 @@
         border-radius: 100%;
       }
     }
+    .OT_edge-bar-item.OT_edge-bottom.OT_mode-off{
+      bottom: 0;
+    }
   }
 }
 
@@ -30,76 +33,12 @@
 }
 
 .rep {
-  .rep-container .center-column .portfolio-review-image {
-    .btn-chat {
-      img {
-        width: 30px;
-      }
-    }
-  }
-  
+  height: 260px;
+
   .cw-actions{
-    background-color: #363636;
-    text-align: center;
-    padding-right: 0;
-    padding-left: 0;
-    margin: 0 15px;
-    width: 295px;
-
-    .btn{
-      width: auto;
-      height: 40px;
-      img{
-        width: 20px;
-      }
-    }
-
-    .btn-record{
-      float: left;
-      color: white;
-      width: 40px;
-      display: none;
-    }
-
-    .btn-record-stop{
-      float: left;
-      display: none;
-      padding: 0;
-    }
-
-    .end-call{
-      float: right;
-      border-radius: 0;
-    }
-
-    .btn-chat{
-      float: right;
-      background-color: #363636;
-      border-left: solid 1px #565656;
-      border-radius: 0;
-      width: 56px;
-      padding: 0;
-
-      &.pressed{
-        background-color: #d8d8d8;
-        border-left: solid 1px #d8d8d8;
-      }
-
-      img{
-        width: 30px;
-        margin-top: 4px;
-      }
-    }
-
-    .red-square{
-      margin: 12px;
-      background: #d9534f;
-      height: 16px;
-      width: 16px;
-      -webkit-animation: OT_pulse 1.3s ease-in;
-    }
+    width: 294px;
+    padding: 0;
   }
-
   .shiftRight{
     top: -100px;
     position: absolute;
@@ -139,6 +78,7 @@
     z-index: 999;
     .panel-heading{
       height: 40px;
+      text-align: left;
       h5{
         margin-top: 0;
         display: inline;
@@ -256,7 +196,7 @@
     input{
       font-size: 16px;
       padding: 5px 10px;
-      width: 295px;
+      width: 100%;
       box-shadow: inset 2px 2px 3px 2px rgba(0, 0, 0, 0.2);
 
       &:focus{
@@ -265,6 +205,11 @@
       }
     }
   }
+}
+
+#chat-opts{
+  bottom: -40px;
+  position: absolute;
 }
 
 
