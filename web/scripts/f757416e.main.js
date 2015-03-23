@@ -26,6 +26,7 @@
       this._sessionConnected = __bind(this._sessionConnected, this);
       this._archiveReady = __bind(this._archiveReady, this);
       this._archiveAdded = __bind(this._archiveAdded, this);
+      this._eventMine = __bind(this._eventMine, this);
       this.signalArchiveMessage = __bind(this.signalArchiveMessage, this);
       this.askArchiveReady = __bind(this.askArchiveReady, this);
       this.stopArchive = __bind(this.stopArchive, this);
@@ -175,13 +176,23 @@
       });
     };
 
+    ServicePanel.prototype._eventMine = function(event) {
+      return event.from.connectionId === this.session.connection.connectionId;
+    };
+
     ServicePanel.prototype._archiveAdded = function(event) {
+      if (this._eventMine(event)) {
+        return;
+      }
       this.archive = event.data.archive;
       this.$startArchive.hide();
       return window.OTCSF.addArchive(this.archive);
     };
 
     ServicePanel.prototype._archiveReady = function(event) {
+      if (this._eventMine(event)) {
+        return;
+      }
       this.archive = event.data.archive;
       this.$startArchive.show();
       return window.OTCSF.archiveReady(this.archive);
@@ -250,7 +261,7 @@
       var from, klass, template;
       from = mine ? 'You' : data.from;
       klass = mine ? 'from-me' : 'from-others';
-      template = '<li class="' + klass + '"><label>' + data.from + ':</label><p>' + data.text + '</p></li>';
+      template = '<li class="' + klass + '"><label>' + from + ':</label><p>' + data.text + '</p></li>';
       this.$messageLog.append(template);
     };
 
@@ -276,10 +287,18 @@
       this.$closeButton.off().text('Cancel call');
       this.session.off();
       this.publisher.off();
+      this.$closeButton.off("click");
+      this.$endButton.off("click");
+      this.$sendButton.off("click");
+      this.$messageText.off("keyup");
+      this.$startArchive.off("click");
+      this.$stopArchive.off("click");
+      this.$messageLog.html("");
       if (this.queueId) {
         this._dequeue();
       }
       this.$panel.hide();
+      window.OTCSF.startChat(false);
       return this.emit('close');
     };
 
@@ -343,7 +362,7 @@
       toggleChat: function() {
         $(".btn-chat").toggleClass("pressed");
         if ($(".btn-chat").hasClass("pressed")) {
-          $("#text-panel").show();
+          $("#text-panel").show().find("input").focus();
           return $(".btn-chat").removeAttr("ios-counter");
         } else {
           return $("#text-panel").hide();
@@ -442,6 +461,7 @@
     function RepServicePanel(panel, representativeName) {
       this._archiveReady = __bind(this._archiveReady, this);
       this._archiveAdded = __bind(this._archiveAdded, this);
+      this._eventMine = __bind(this._eventMine, this);
       this.publisherDenied = __bind(this.publisherDenied, this);
       this.publisherAllowed = __bind(this.publisherAllowed, this);
       this.endCall = __bind(this.endCall, this);
@@ -715,7 +735,7 @@
 
     RepServicePanel.prototype.messageReceived = function(event) {
       var count, mine;
-      mine = event.from.connectionId === this.session.connection.connectionId;
+      mine = this._eventMine(event);
       this._renderNewMessage(event.data, mine);
       this.$textChat.scrollTop(this.$textChat[0].scrollHeight);
       if (this.$textChat.is(":visible")) {
@@ -737,7 +757,10 @@
       this.$customerName.text('');
       this.$chatWrap.hide();
       this.$endCall.hide();
-      return this.$textChat.hide();
+      this.$textChat.hide();
+      this.$sendButton.off("click");
+      this.$messageText.off("keyup");
+      return this.$messageLog.html("");
     };
 
     RepServicePanel.prototype.endCall = function() {
@@ -757,13 +780,23 @@
 
     RepServicePanel.prototype.publisherDenied = function() {};
 
+    RepServicePanel.prototype._eventMine = function(event) {
+      return event.from.connectionId === this.session.connection.connectionId;
+    };
+
     RepServicePanel.prototype._archiveAdded = function(event) {
+      if (this._eventMine(event)) {
+        return;
+      }
       this.archive = event.data.archive;
       this.$startArchive.hide();
       return window.OTCSF.addArchive(this.archive);
     };
 
     RepServicePanel.prototype._archiveReady = function(event) {
+      if (this._eventMine(event)) {
+        return;
+      }
       this.archive = event.data.archive;
       this.$startArchive.show();
       return window.OTCSF.archiveReady(this.archive);
@@ -773,7 +806,7 @@
       var from, klass, template;
       from = mine ? 'You' : data.from;
       klass = mine ? 'from-me' : 'from-others';
-      template = '<li class="' + klass + '"><label>' + data.from + ':</label><p>' + data.text + '</p></li>';
+      template = '<li class="' + klass + '"><label>' + from + ':</label><p>' + data.text + '</p></li>';
       this.$messageLog.append(template);
     };
 
@@ -793,7 +826,7 @@
       toggleChat: function() {
         $(".btn-chat").toggleClass("pressed");
         if ($(".btn-chat").hasClass("pressed")) {
-          $("#chat-collapse").show();
+          $("#chat-collapse").show().find("input").focus();
           return $(".btn-chat").removeAttr("ios-counter");
         } else {
           return $("#chat-collapse").hide();
