@@ -205,7 +205,7 @@ class RepServicePanel extends EventEmitter2
     return
 
   messageReceived: (event) =>
-    mine = event.from.connectionId == @session.connection.connectionId
+    mine = @_eventMine(event)
     @_renderNewMessage event.data, mine
     @$textChat.scrollTop @$textChat[0].scrollHeight
     if @$textChat.is(":visible")
@@ -227,6 +227,10 @@ class RepServicePanel extends EventEmitter2
     @$endCall.hide()
     @$textChat.hide()
 
+    @$sendButton.off "click"
+    @$messageText.off "keyup"
+    @$messageLog.html ""
+
   endCall: =>
     if @connected
       @session.unpublish @publisher
@@ -242,12 +246,17 @@ class RepServicePanel extends EventEmitter2
   publisherDenied: =>
     return
 
+  _eventMine: (event) =>
+    event.from.connectionId == @session.connection.connectionId
+
   _archiveAdded: (event) =>
+    return if @_eventMine(event)
     @archive = event.data.archive
     @$startArchive.hide()
     window.OTCSF.addArchive @archive
 
   _archiveReady: (event) =>
+    return if @_eventMine(event)
     @archive = event.data.archive
     @$startArchive.show()
     window.OTCSF.archiveReady @archive
@@ -255,7 +264,7 @@ class RepServicePanel extends EventEmitter2
   _renderNewMessage: (data, mine) ->
     from = if mine then 'You' else data.from
     klass = if mine then 'from-me' else 'from-others'
-    template = '<li class="' + klass + '"><label>' + data.from + ':</label><p>' + data.text + '</p></li>'
+    template = '<li class="' + klass + '"><label>' + from + ':</label><p>' + data.text + '</p></li>'
     @$messageLog.append template
     return
 
@@ -269,7 +278,7 @@ TBB.RepChatWidgetComponent = Ember.Component.extend
     toggleChat: =>
       $(".btn-chat").toggleClass("pressed")
       if $(".btn-chat").hasClass("pressed")
-        $("#chat-collapse").show()
+        $("#chat-collapse").show().find("input").focus()
         $(".btn-chat").removeAttr("ios-counter")
       else
         $("#chat-collapse").hide()

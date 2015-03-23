@@ -121,12 +121,17 @@ class ServicePanel extends EventEmitter2
       if error
         console.log "Error signaling #{type}", error
 
+  _eventMine: (event) =>
+    event.from.connectionId == @session.connection.connectionId
+
   _archiveAdded: (event) =>
+    return if @_eventMine(event)
     @archive = event.data.archive
     @$startArchive.hide()
     window.OTCSF.addArchive @archive
 
   _archiveReady: (event) =>
+    return if @_eventMine(event)
     @archive = event.data.archive
     @$startArchive.show()
     window.OTCSF.archiveReady @archive
@@ -188,7 +193,7 @@ class ServicePanel extends EventEmitter2
   _renderNewMessage: (data, mine) ->
     from = if mine then 'You' else data.from
     klass = if mine then 'from-me' else 'from-others'
-    template = '<li class="' + klass + '"><label>' + data.from + ':</label><p>' + data.text + '</p></li>'
+    template = '<li class="' + klass + '"><label>' + from + ':</label><p>' + data.text + '</p></li>'
     @$messageLog.append template
     return
 
@@ -213,9 +218,17 @@ class ServicePanel extends EventEmitter2
     @$closeButton.off().text 'Cancel call'
     @session.off()
     @publisher.off()
+    @$closeButton.off "click"
+    @$endButton.off "click"
+    @$sendButton.off "click"
+    @$messageText.off "keyup"
+    @$startArchive.off "click"
+    @$stopArchive.off "click"
+    @$messageLog.html ""
     if @queueId
       @_dequeue()
     @$panel.hide()
+    window.OTCSF.startChat(false)
     @emit 'close'
 
   _dequeue: =>
@@ -265,7 +278,7 @@ TBB.ChatWidgetComponent = Ember.Component.extend
     toggleChat: =>
       $(".btn-chat").toggleClass("pressed")
       if $(".btn-chat").hasClass("pressed")
-        $("#text-panel").show()
+        $("#text-panel").show().find("input").focus()
         $(".btn-chat").removeAttr("ios-counter")
       else
         $("#text-panel").hide()
