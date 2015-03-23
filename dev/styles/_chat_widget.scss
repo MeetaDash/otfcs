@@ -190,7 +190,7 @@ p.small {
 #text-panel{
   display: none;
   z-index: 999;
-  left: 110%;
+  left: -110%;
 
   .panel{
     .panel-heading{
