@@ -549,11 +549,11 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
     'class': (":chat-widget shouldChatStick:stick :video-holder :on-queue :customer")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || depth0['bind-attr']),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push(">\n      <div class=\"subscriber\"></div>\n      <div class=\"publisher\"></div>\n\n      <div class=\"col-md-12 cw-actions\">\n        <a class=\"btn btn-record\" title=\"Start Recording\"><img src=\"/images/rec.png\"/></a>\n        <a class=\"btn btn-record-stop\" title=\"Stop Recording\"><div class=\"black-square\"></div></a>\n        <a class=\"btn btn-chat\"><img src=\"/images/icon_Chat.png\" ");
+  data.buffer.push(">\n      <div class=\"subscriber\"></div>\n      <div class=\"publisher\"></div>\n\n      <div class=\"col-md-12 cw-actions\">\n        <a class=\"btn btn-chat\"><img src=\"/images/icon_Chat.png\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleChat", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("></img></a>\n        <a class=\"btn btn-danger end-call\">End Call</a>\n      </div>\n\n\n      <div id=\"text-panel\">\n        <div id=\"chat-collapse\" class=\"panel panel-default\">\n            <div class=\"panel-heading\">\n              <h5>Text chat</h5>\n              <a ");
+  data.buffer.push("></img></a>\n        <a class=\"btn btn-record\" title=\"Start Recording\"><img src=\"/images/rec.png\"/></a>\n        <a class=\"btn btn-record-stop\" title=\"Stop Recording\"><div class=\"black-square\"></div></a>\n        <a class=\"btn btn-danger end-call\">End Call</a>\n      </div>\n\n\n      <div id=\"text-panel\">\n        <div id=\"chat-collapse\" class=\"panel panel-default\">\n            <div class=\"panel-heading\">\n              <h5>Text chat</h5>\n              <a ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleChat", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -620,11 +620,11 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div id=\"service-provider\" class=\"rep\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <div class=\"panel panel-default\">\n                <div class=\"panel-body video-holder\">\n                    <div class=\"subscriber\" ></div>\n                    <div class=\"publisher\" ></div>\n                    <div id=\"chat-opts\" class=\"row\" style=\"display: none;\">\n                        <div class=\"col-md-12 cw-actions\">\n                          <a class=\"btn btn-record\" title=\"Start Recording\"><img src=\"/images/rec.png\"/></a>\n                          <a class=\"btn btn-record-stop\" title=\"Stop Recording\"><div class=\"black-square\"></div></a>\n                          <a class=\"btn btn-chat\"><img src=\"/images/icon_Chat.png\" ");
+  data.buffer.push("<div id=\"service-provider\" class=\"rep\">\n    <div class=\"row\">\n        <div class=\"col-md-12\">\n            <div class=\"panel panel-default\">\n                <div class=\"panel-body video-holder\">\n                    <div class=\"subscriber\" ></div>\n                    <div class=\"publisher\" ></div>\n                    <div id=\"chat-opts\" class=\"row\" style=\"display: none;\">\n                        <div class=\"col-md-12 cw-actions\">                          \n                          <a class=\"btn btn-chat\"><img src=\"/images/icon_Chat.png\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleChat", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("></img></a>\n                          <a class=\"btn btn-danger end-call\">End Call</a>\n                        </div>\n                        <div class=\"col-md-12 noHeight shiftRight\">\n                            <div id=\"chat-collapse\" class=\"panel panel-default collapse\">\n                                <div class=\"panel-heading\">\n                                  <h5>Text chat</h5>\n                                  <a ");
+  data.buffer.push("></img></a>\n                          <a class=\"btn btn-record\" title=\"Start Recording\"><img src=\"/images/rec.png\"/></a>\n                          <a class=\"btn btn-record-stop\" title=\"Stop Recording\"><div class=\"black-square\"></div></a>\n                          <a class=\"btn btn-danger end-call\">End Call</a>\n                        </div>\n                        <div class=\"col-md-12 noHeight shiftRight\">\n                            <div id=\"chat-collapse\" class=\"panel panel-default collapse\">\n                                <div class=\"panel-heading\">\n                                  <h5>Text chat</h5>\n                                  <a ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleChat", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
