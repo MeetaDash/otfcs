@@ -22,7 +22,8 @@
       "description": "OpenTok API Secret: Login to the TokBox Dashboard (https://dashboard.tokbox.com/keys) to get this value",
       "required": true
     },
-    "SLIM_MODE": "production"
+    "SLIM_MODE": "production",
+    "BUILDPACK_URL": "https://github.com/heroku/heroku-buildpack-php"
   },
   "addons": [
     "redistogo"
