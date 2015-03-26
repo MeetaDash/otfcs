@@ -41,10 +41,11 @@
     background-color: transparent;
     border-radius: 100% !important;
     video{
-      width: 100% !important;
+      //width: 100% !important;
       left: 0 !important;
-      height: 100% !important;
+      //height: 100% !important;
       border-radius: 100% !important;
+      top: 0 !important;
     }
   }
 }
@@ -53,13 +54,30 @@
   .publisher{
     .OT_publisher {
       background-color: #000;
+      .OT_widget-container {
+        background-color: black;
+        border-radius: 100px;
+        width: 100px !important;
+        height: 100px !important;
+        video{
+          width: 100px !important;
+          height: 100px !important;
+        }
+      }
     }
   }
 }
 
 .publisher{
   .OT_widget-container {
-    background-color: transparent;
+    background-color: black;
+    border-radius: 50px;
+    width: 50px !important;
+    height: 50px !important;
+    video{
+      width: 50px !important;
+      height: 50px !important;
+    }
   }
 
   .OT_video-disabled-indicator {
