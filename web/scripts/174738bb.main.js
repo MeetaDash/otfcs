@@ -897,7 +897,7 @@
         title: 'Portfolio Review 2015',
         rep: {
           id: 'Scott',
-          name: 'Scott Small'
+          name: 'Scott Lomond'
         },
         time: moment('01:30pm', 'hh:mma'),
         isToday: true
@@ -905,14 +905,14 @@
         title: 'Investment Tips Session',
         rep: {
           id: 'Scott',
-          name: 'Scott Small'
+          name: 'Scott Lomond'
         },
         time: (new Date()).getTime() + 3600000
       }, {
         title: '401k Updates',
         rep: {
           id: 'Scott',
-          name: 'Scott Small'
+          name: 'Scott Lomond'
         },
         time: (new Date()).getTime() + 5100000
       }
