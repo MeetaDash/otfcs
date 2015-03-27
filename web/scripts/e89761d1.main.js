@@ -1089,7 +1089,8 @@
     actions: {
       showArchiveEntry: function(entry) {
         $('#myModal').modal('show');
-        return this.set('archiveVideoUrl', entry.url);
+        this.set('archiveVideoUrl', entry.url);
+        return $('#myModal').find('video').attr('src', entry.url);
       }
     },
     cashTransactions: (function() {
@@ -1569,6 +1570,9 @@
           $('#myModal').modal('hide');
           return $('#previewModalVideo')[0].pause();
         }
+      });
+      $('#myModal').on('hidden.bs.modal', function() {
+        return $(_this).removeData('bs.modal');
       });
       return $(window).resize(function() {
         return _this.$('.modal-table').height(window.innerHeight);
