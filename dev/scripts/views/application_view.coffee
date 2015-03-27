@@ -1,5 +1,5 @@
 TBB.ApplicationView = Em.View.extend
-  didInsertElement: -> 
+  didInsertElement: ->
     console.log 'insert element'
     # on click in table, check if click originated from table cell.
     # 
@@ -8,6 +8,9 @@ TBB.ApplicationView = Em.View.extend
           $('#myModal').modal('hide')
           $('#previewModalVideo')[0].pause()
       )
+
+    $('#myModal').on 'hidden.bs.modal', () =>
+        $(this).removeData('bs.modal')
 
     $(window).resize =>
       @$('.modal-table').height(window.innerHeight)

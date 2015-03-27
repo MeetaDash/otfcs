@@ -24,6 +24,7 @@ TBB.ApplicationController = Em.ObjectController.extend
     showArchiveEntry: (entry) ->
       $('#myModal').modal('show')
       @set 'archiveVideoUrl', entry.url
+      $('#myModal').find('video').attr('src', entry.url)
   cashTransactions:(->
     currentCash = @get 'totalCash'
     lastCash = null
