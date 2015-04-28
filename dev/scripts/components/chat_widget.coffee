@@ -43,6 +43,7 @@ class ServicePanel extends EventEmitter2
     @session.on "sessionDisconnected", this._sessionDisconnected, this
     @session.on "streamCreated", this._streamCreated, this
     @session.on "streamDestroyed", this._streamDestroyed, this
+    @session.on "archiveStopped", this._archiveStopped, this
     @session.on "signal:chat", this._messageReceived, this
     @session.on "signal:sharedData", this._shareReceived, this
     @session.on "signal:archiveAdded", this._archiveAdded, this
@@ -128,10 +129,14 @@ class ServicePanel extends EventEmitter2
   _eventMine: (event) =>
     event.from.connectionId == @session.connection.connectionId
 
+  _archiveStopped: (event) =>
+    @$stopArchive.hide()
+
   _archiveAdded: (event) =>
     return if @_eventMine(event)
     @archive = event.data.archive
     @$startArchive.hide()
+    @$stopArchive.show()
     window.OTCSF.addArchive @archive
 
   _archiveReady: (event) =>

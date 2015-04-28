@@ -27,6 +27,7 @@
       this._sessionConnected = __bind(this._sessionConnected, this);
       this._archiveReady = __bind(this._archiveReady, this);
       this._archiveAdded = __bind(this._archiveAdded, this);
+      this._archiveStopped = __bind(this._archiveStopped, this);
       this._eventMine = __bind(this._eventMine, this);
       this.signalArchiveMessage = __bind(this.signalArchiveMessage, this);
       this.askArchiveReady = __bind(this.askArchiveReady, this);
@@ -78,6 +79,7 @@
       this.session.on("sessionDisconnected", this._sessionDisconnected, this);
       this.session.on("streamCreated", this._streamCreated, this);
       this.session.on("streamDestroyed", this._streamDestroyed, this);
+      this.session.on("archiveStopped", this._archiveStopped, this);
       this.session.on("signal:chat", this._messageReceived, this);
       this.session.on("signal:sharedData", this._shareReceived, this);
       this.session.on("signal:archiveAdded", this._archiveAdded, this);
@@ -186,12 +188,17 @@
       return event.from.connectionId === this.session.connection.connectionId;
     };
 
+    ServicePanel.prototype._archiveStopped = function(event) {
+      return this.$stopArchive.hide();
+    };
+
     ServicePanel.prototype._archiveAdded = function(event) {
       if (this._eventMine(event)) {
         return;
       }
       this.archive = event.data.archive;
       this.$startArchive.hide();
+      this.$stopArchive.show();
       return window.OTCSF.addArchive(this.archive);
     };
 
@@ -475,6 +482,7 @@
     function RepServicePanel(panel, representativeName) {
       this._archiveReady = __bind(this._archiveReady, this);
       this._archiveAdded = __bind(this._archiveAdded, this);
+      this._archiveStopped = __bind(this._archiveStopped, this);
       this._eventMine = __bind(this._eventMine, this);
       this.publisherDenied = __bind(this.publisherDenied, this);
       this.publisherAllowed = __bind(this.publisherAllowed, this);
@@ -622,6 +630,7 @@
       this.session.on("sessionDisconnected", this.sessionDisconnected);
       this.session.on("streamCreated", this.streamCreated);
       this.session.on("streamDestroyed", this.streamDestroyed);
+      this.session.on("archiveStopped", this._archiveStopped, this);
       this.session.on('signal:chat', this.messageReceived);
       this.session.on("signal:archiveAdded", this._archiveAdded, this);
       this.session.on("signal:archiveReady", this._archiveReady, this);
@@ -840,12 +849,17 @@
       return event.from.connectionId === this.session.connection.connectionId;
     };
 
+    RepServicePanel.prototype._archiveStopped = function(event) {
+      return this.$stopArchive.hide();
+    };
+
     RepServicePanel.prototype._archiveAdded = function(event) {
       if (this._eventMine(event)) {
         return;
       }
       this.archive = event.data.archive;
       this.$startArchive.hide();
+      this.$stopArchive.show();
       return window.OTCSF.addArchive(this.archive);
     };
 

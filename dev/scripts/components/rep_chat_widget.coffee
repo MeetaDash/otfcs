@@ -104,6 +104,7 @@ class RepServicePanel extends EventEmitter2
     @session.on "sessionDisconnected", @sessionDisconnected
     @session.on "streamCreated", @streamCreated
     @session.on "streamDestroyed", @streamDestroyed
+    @session.on "archiveStopped", this._archiveStopped, this
     @session.on 'signal:chat', @messageReceived
     @session.on "signal:archiveAdded", this._archiveAdded, this
     @session.on "signal:archiveReady", this._archiveReady, this
@@ -282,10 +283,14 @@ class RepServicePanel extends EventEmitter2
   _eventMine: (event) =>
     event.from.connectionId == @session.connection.connectionId
 
+  _archiveStopped: (event) =>
+    @$stopArchive.hide()
+
   _archiveAdded: (event) =>
     return if @_eventMine(event)
     @archive = event.data.archive
     @$startArchive.hide()
+    @$stopArchive.show()
     window.OTCSF.addArchive @archive
 
   _archiveReady: (event) =>
