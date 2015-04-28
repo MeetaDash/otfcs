@@ -197,6 +197,8 @@ class ServicePanel extends EventEmitter2
   _shareReceived: (event) =>
     if event.data.type == 'sharedContent'
       window.OTCSF.addSharedContent(event.data.data)
+    else if event.data.type == 'meeting'
+      window.OTCSF.showNewMeeting(event.data.data)
     return
 
   _renderNewMessage: (data, mine) ->

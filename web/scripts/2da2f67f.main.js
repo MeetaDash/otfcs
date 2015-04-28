@@ -266,6 +266,8 @@
     ServicePanel.prototype._shareReceived = function(event) {
       if (event.data.type === 'sharedContent') {
         window.OTCSF.addSharedContent(event.data.data);
+      } else if (event.data.type === 'meeting') {
+        window.OTCSF.showNewMeeting(event.data.data);
       }
     };
 
@@ -537,6 +539,7 @@
       this.$endCall.on("click", this.endCall);
       this.$startArchive.on("click", this.startArchive);
       this.$stopArchive.on("click", this.stopArchive);
+      $(".customer-viewing").hide();
       console.log('RepServicePanel constructor called');
       this.sharedData = [
         {
@@ -704,12 +707,13 @@
       this.waitingForCustomer = true;
       setTimeout(this.waitForCustomerExpired, this.customerWaitExpirationInterval);
       this.connected = true;
-      return this.session.publish(this.publisher, function(err) {
+      this.session.publish(this.publisher, function(err) {
         if (err && err.code === 1013) {
           console.log('The publisher failed to connect.');
           return this.endCall();
         }
       });
+      return $(".customer-viewing").hide();
     };
 
     RepServicePanel.prototype.sessionDisconnected = function() {
@@ -1062,7 +1066,7 @@
         archive = _this.get('archives').objectAt(0);
         archive.url = data.url;
         Em.set(archive, "url", data.url);
-        Em.set(archive, "duration", data.duration);
+        Em.set(archive, "duration", data.duration * 1000);
         Em.set(archive, "title", data.name);
         archives[0] = archive;
         _this.set('archives', archives);
@@ -1461,6 +1465,7 @@
       window.OTCSF.sendSharedContent = function(contentModels) {
         if (window.OTCSF.otcs && window.OTCSF.otcs.sharedData) {
           console.log("sending data");
+          $(".customer-viewing").show();
           window.OTCSF.otcs.sharedData.set('sharedContent', contentModels);
         }
         return console.log('models ready to be sent:', contentModels);
@@ -1485,7 +1490,7 @@
         archive = _this.get('archives').objectAt(0);
         archive.url = data.url;
         Em.set(archive, "url", data.url);
-        Em.set(archive, "duration", data.duration);
+        Em.set(archive, "duration", data.duration * 1000);
         Em.set(archive, "title", data.name);
         archives[0] = archive;
         _this.set('archives', archives);

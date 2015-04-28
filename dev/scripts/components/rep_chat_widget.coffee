@@ -43,6 +43,8 @@ class RepServicePanel extends EventEmitter2
     @$startArchive.on "click", this.startArchive
     @$stopArchive.on "click", this.stopArchive
 
+    $(".customer-viewing").hide();
+
     console.log 'RepServicePanel constructor called'
 
     @sharedData = [{
@@ -171,6 +173,8 @@ class RepServicePanel extends EventEmitter2
       if err && err.code == 1013
         console.log 'The publisher failed to connect.'
         @endCall()
+
+    $(".customer-viewing").hide();
 
     # for obj in @sharedData
     #  @session.signal(type: 'sharedData', data: obj)

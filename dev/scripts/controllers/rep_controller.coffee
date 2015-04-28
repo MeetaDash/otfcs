@@ -115,6 +115,7 @@ TBB.RepController = Em.ObjectController.extend
     window.OTCSF.sendSharedContent = (contentModels) =>
       if window.OTCSF.otcs and window.OTCSF.otcs.sharedData
         console.log "sending data"
+        $(".customer-viewing").show();
         window.OTCSF.otcs.sharedData.set('sharedContent', contentModels)
       console.log 'models ready to be sent:', contentModels
       # send an array of content models
@@ -134,7 +135,7 @@ TBB.RepController = Em.ObjectController.extend
       archive = @get('archives').objectAt(0)
       archive.url = data.url
       Em.set archive, "url", data.url
-      Em.set archive, "duration", data.duration
+      Em.set archive, "duration", (data.duration*1000)
       Em.set archive, "title", data.name
       archives[0] = archive
       @set 'archives', archives

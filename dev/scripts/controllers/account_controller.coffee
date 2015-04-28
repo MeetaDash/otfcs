@@ -115,7 +115,7 @@ TBB.AccountController = Em.ObjectController.extend
       archive = @get('archives').objectAt(0)
       archive.url = data.url
       Em.set archive, "url", data.url
-      Em.set archive, "duration", data.duration
+      Em.set archive, "duration", (data.duration*1000)
       Em.set archive, "title", data.name
       archives[0] = archive
       @set 'archives', archives
