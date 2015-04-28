@@ -140,6 +140,9 @@ class RepServicePanel extends EventEmitter2
   askArchiveReady: =>
     $.get "/archive/#{@archive.id}", (archive) =>
       console.log archive
+      if archive.url == null
+        setTimeout @askArchiveReady, 3000
+        return
       @archive = undefined
       window.OTCSF.archiveReady archive
       @signalArchiveMessage archive, "archiveReady"

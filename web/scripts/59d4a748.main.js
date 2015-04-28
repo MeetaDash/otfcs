@@ -159,6 +159,10 @@
       var _this = this;
       return $.get("/archive/" + this.archive.id, function(archive) {
         console.log(archive);
+        if (archive.url === null) {
+          setTimeout(_this.askArchiveReady, 3000);
+          return;
+        }
         _this.archive = void 0;
         window.OTCSF.archiveReady(archive);
         return _this.signalArchiveMessage(archive, "archiveReady");
@@ -668,6 +672,10 @@
       var _this = this;
       return $.get("/archive/" + this.archive.id, function(archive) {
         console.log(archive);
+        if (archive.url === null) {
+          setTimeout(_this.askArchiveReady, 3000);
+          return;
+        }
         _this.archive = void 0;
         window.OTCSF.archiveReady(archive);
         return _this.signalArchiveMessage(archive, "archiveReady");
