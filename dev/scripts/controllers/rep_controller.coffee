@@ -48,19 +48,22 @@ TBB.RepController = Em.ObjectController.extend
     {
       title: "401k Update"
       time: (new Date()).getTime() - 10340000
-      url: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
+      url: "https://www.youtube.com/embed/rDmZwsMGqRE?autoplay=1"
+      type: "youtube"
       duration: 1339000
     }
     {
       title: "Portfolio Review"
       time: (new Date()).getTime() - 74120000
-      url: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
+      url: "https://www.youtube.com/embed/rDmZwsMGqRE?autoplay=1"
+      type: "youtube"
       duration: 754000
     }
     {
       title: "Portfolio Updates"
       time: (new Date()).getTime() - 202340000
-      url: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
+      url: "https://www.youtube.com/embed/rDmZwsMGqRE?autoplay=1"
+      type: "youtube"
       duration: 552000
     }
   ]

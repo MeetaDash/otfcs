@@ -23,8 +23,19 @@ TBB.ApplicationController = Em.ObjectController.extend
   actions:
     showArchiveEntry: (entry) ->
       $('#myModal').modal('show')
-      @set 'archiveVideoUrl', entry.url
-      $('#myModal').find('video').attr('src', entry.url)
+      if entry.type == "youtube"
+        url = null
+        if (entry.url.indexOf('?') == -1)
+          url = (entry.url + '?enablejsapi=1')
+        else
+          url = (entry.url + '&enablejsapi=1')
+        $('#myModal').find('video').hide()
+        $('#myModal').find('iframe').show().attr('src', url)
+      else
+        @set 'archiveVideoUrl', entry.url
+        $('#myModal').find('iframe').hide()
+        $('#myModal').find('video').show().attr('src', entry.url)
+        
   cashTransactions:(->
     currentCash = @get 'totalCash'
     lastCash = null

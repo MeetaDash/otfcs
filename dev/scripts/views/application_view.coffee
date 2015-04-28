@@ -6,7 +6,10 @@ TBB.ApplicationView = Em.View.extend
     @$('.modal-table').on('click', (e) =>
         if e.toElement.localName != 'video'
           $('#myModal').modal('hide')
-          $('#previewModalVideo')[0].pause()
+          if $('#previewModalVideo')[0]
+            $('#previewModalVideo')[0].pause()
+          if $('#myModal').find('iframe')[0]
+            $('#myModal').find('iframe')[0].contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
       )
 
     $('#myModal').on 'hidden.bs.modal', () =>

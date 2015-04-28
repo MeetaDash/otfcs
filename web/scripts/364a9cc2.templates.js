@@ -430,12 +430,12 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push("<!-- Modal -->\n<div class=\"modal fade\" id=\"myModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n      <div class=\"modal-table\">\n        <div class=\"modal-tablecell\">\n          ");
+  data.buffer.push("<!-- Modal -->\n<div class=\"modal fade\" id=\"myModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n      <div class=\"modal-table\">\n        <div class=\"modal-tablecell\" style=\"text-align:center\">\n          ");
   hashTypes = {};
   hashContexts = {};
   stack1 = helpers['if'].call(depth0, "archiveVideoUrl", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n        </div>\n      </div>\n</div><!-- /.modal -->\n\n");
+  data.buffer.push("\n          <iframe style=\"display:none\" width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/rDmZwsMGqRE\" frameborder=\"0\" allowfullscreen></iframe>\n        </div>\n      </div>\n</div><!-- /.modal -->\n\n");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "outlet", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));

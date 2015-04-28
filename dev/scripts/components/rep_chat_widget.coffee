@@ -45,6 +45,24 @@ class RepServicePanel extends EventEmitter2
 
     console.log 'RepServicePanel constructor called'
 
+    @sharedData = [{
+      type: 'sharedContent',
+      data: 0
+    }];
+    window.OTCSF.otcs = { sharedData: {}}
+    window.OTCSF.otcs.sharedData.set = ((type, content) ->
+      obj = {type: type, data: content}
+      found = null
+      for searchObj, index in @sharedData
+        if searchObj.type == type
+          @sharedData.splice(index, 1)
+          break;
+      @sharedData.push(obj)
+      if @connected
+        @session.signal({type: 'sharedData', data: obj})
+      ).bind(this)
+
+
   start: =>
     console.log 'RepServicePanel starting'
     @publisher.on 'streamDestroyed', (event) ->
@@ -80,6 +98,7 @@ class RepServicePanel extends EventEmitter2
 
     @session = OT.initSession customerData.apiKey, customerData.sessionId
     @session.on "sessionConnected", @sessionConnected
+    @session.on "connectionCreated", @connectionCreated
     @session.on "sessionDisconnected", @sessionDisconnected
     @session.on "streamCreated", @streamCreated
     @session.on "streamDestroyed", @streamDestroyed
@@ -150,6 +169,9 @@ class RepServicePanel extends EventEmitter2
         console.log 'The publisher failed to connect.'
         @endCall()
 
+    # for obj in @sharedData
+    #  @session.signal(type: 'sharedData', data: obj)
+
   sessionDisconnected: =>
     @connected = false
     @subscriber = undefined
@@ -158,6 +180,10 @@ class RepServicePanel extends EventEmitter2
     @clearCustomer()
 
     setTimeout(@getCustomer, 10000)
+
+  connectionCreated: =>
+  #  for obj in @sharedData
+  #    @session.signal(type: 'sharedData', data: obj)
 
   streamCreated: (event) =>
     if not @subscriber

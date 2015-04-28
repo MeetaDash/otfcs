@@ -1,13 +1,14 @@
 ﻿<!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-table">
-        <div class="modal-tablecell">
+        <div class="modal-tablecell" style="text-align:center">
           {{#if archiveVideoUrl}}
             <video id="previewModalVideo" width="640" height="480" controls>
               <source {{bind-attr src=archiveVideoUrl}} type="video/mp4">
             Your browser does not support the video tag.
             </video>
           {{/if}}
+          <iframe style="display:none" width="560" height="315" src="https://www.youtube.com/embed/rDmZwsMGqRE" frameborder="0" allowfullscreen></iframe>
         </div>
       </div>
 </div><!-- /.modal -->

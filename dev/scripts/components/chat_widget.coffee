@@ -44,6 +44,7 @@ class ServicePanel extends EventEmitter2
     @session.on "streamCreated", this._streamCreated, this
     @session.on "streamDestroyed", this._streamDestroyed, this
     @session.on "signal:chat", this._messageReceived, this
+    @session.on "signal:sharedData", this._shareReceived, this
     @session.on "signal:archiveAdded", this._archiveAdded, this
     @session.on "signal:archiveReady", this._archiveReady, this
 
@@ -188,6 +189,11 @@ class ServicePanel extends EventEmitter2
     else
       count =parseInt(@$btnChat.attr("ios-counter")) || 0
       @$btnChat.attr("ios-counter", count + 1)
+    return
+
+  _shareReceived: (event) =>
+    if event.data.type == 'sharedContent'
+      window.OTCSF.addSharedContent(event.data.data)
     return
 
   _renderNewMessage: (data, mine) ->

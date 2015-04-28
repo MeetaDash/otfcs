@@ -19,6 +19,7 @@
       this._cleanUp = __bind(this._cleanUp, this);
       this._publisherDenied = __bind(this._publisherDenied, this);
       this._publisherAllowed = __bind(this._publisherAllowed, this);
+      this._shareReceived = __bind(this._shareReceived, this);
       this._messageReceived = __bind(this._messageReceived, this);
       this._streamDestroyed = __bind(this._streamDestroyed, this);
       this._streamCreated = __bind(this._streamCreated, this);
@@ -78,6 +79,7 @@
       this.session.on("streamCreated", this._streamCreated, this);
       this.session.on("streamDestroyed", this._streamDestroyed, this);
       this.session.on("signal:chat", this._messageReceived, this);
+      this.session.on("signal:sharedData", this._shareReceived, this);
       this.session.on("signal:archiveAdded", this._archiveAdded, this);
       this.session.on("signal:archiveReady", this._archiveReady, this);
       this.publisher = OT.initPublisher(this.$publisher[0], this._videoProperties);
@@ -254,6 +256,12 @@
       } else {
         count = parseInt(this.$btnChat.attr("ios-counter")) || 0;
         this.$btnChat.attr("ios-counter", count + 1);
+      }
+    };
+
+    ServicePanel.prototype._shareReceived = function(event) {
+      if (event.data.type === 'sharedContent') {
+        window.OTCSF.addSharedContent(event.data.data);
       }
     };
 
@@ -474,6 +482,7 @@
       this.startCallTimer = __bind(this.startCallTimer, this);
       this.streamDestroyed = __bind(this.streamDestroyed, this);
       this.streamCreated = __bind(this.streamCreated, this);
+      this.connectionCreated = __bind(this.connectionCreated, this);
       this.sessionDisconnected = __bind(this.sessionDisconnected, this);
       this.sessionConnected = __bind(this.sessionConnected, this);
       this.renderCustomer = __bind(this.renderCustomer, this);
@@ -525,6 +534,38 @@
       this.$startArchive.on("click", this.startArchive);
       this.$stopArchive.on("click", this.stopArchive);
       console.log('RepServicePanel constructor called');
+      this.sharedData = [
+        {
+          type: 'sharedContent',
+          data: 0
+        }
+      ];
+      window.OTCSF.otcs = {
+        sharedData: {}
+      };
+      window.OTCSF.otcs.sharedData.set = (function(type, content) {
+        var found, index, obj, searchObj, _i, _len, _ref;
+        obj = {
+          type: type,
+          data: content
+        };
+        found = null;
+        _ref = this.sharedData;
+        for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
+          searchObj = _ref[index];
+          if (searchObj.type === type) {
+            this.sharedData.splice(index, 1);
+            break;
+          }
+        }
+        this.sharedData.push(obj);
+        if (this.connected) {
+          return this.session.signal({
+            type: 'sharedData',
+            data: obj
+          });
+        }
+      }).bind(this);
     }
 
     RepServicePanel.prototype.start = function() {
@@ -570,6 +611,7 @@
       this.videoProperties.name = customerData.customerName;
       this.session = OT.initSession(customerData.apiKey, customerData.sessionId);
       this.session.on("sessionConnected", this.sessionConnected);
+      this.session.on("connectionCreated", this.connectionCreated);
       this.session.on("sessionDisconnected", this.sessionDisconnected);
       this.session.on("streamCreated", this.streamCreated);
       this.session.on("streamDestroyed", this.streamDestroyed);
@@ -670,6 +712,8 @@
       this.clearCustomer();
       return setTimeout(this.getCustomer, 10000);
     };
+
+    RepServicePanel.prototype.connectionCreated = function() {};
 
     RepServicePanel.prototype.streamCreated = function(event) {
       if (!this.subscriber) {
@@ -921,17 +965,20 @@
       {
         title: "401k Update",
         time: (new Date()).getTime() - 10340000,
-        url: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
+        url: "https://www.youtube.com/embed/rDmZwsMGqRE?autoplay=1",
+        type: "youtube",
         duration: 354000
       }, {
         title: "Portfolio Review",
         time: (new Date()).getTime() - 74120000,
-        url: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
+        url: "https://www.youtube.com/embed/rDmZwsMGqRE?autoplay=1",
+        type: "youtube",
         duration: 754000
       }, {
         title: "Portfolio Updates",
         time: (new Date()).getTime() - 202340000,
-        url: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
+        url: "https://www.youtube.com/embed/rDmZwsMGqRE?autoplay=1",
+        type: "youtube",
         duration: 552000
       }
     ],
@@ -961,11 +1008,6 @@
       window.OTCSF = {};
       window.OTCSF.addSharedContent = function(contentModel) {
         var contentModels;
-        contentModels = [
-          {
-            url: 'http://i.imgur.com/YrkHK2r.png'
-          }
-        ];
         if (contentModel === 0) {
           contentModels = [
             {
@@ -1088,9 +1130,22 @@
     ],
     actions: {
       showArchiveEntry: function(entry) {
+        var url;
         $('#myModal').modal('show');
-        this.set('archiveVideoUrl', entry.url);
-        return $('#myModal').find('video').attr('src', entry.url);
+        if (entry.type === "youtube") {
+          url = null;
+          if (entry.url.indexOf('?') === -1) {
+            url = entry.url + '?enablejsapi=1';
+          } else {
+            url = entry.url + '&enablejsapi=1';
+          }
+          $('#myModal').find('video').hide();
+          return $('#myModal').find('iframe').show().attr('src', url);
+        } else {
+          this.set('archiveVideoUrl', entry.url);
+          $('#myModal').find('iframe').hide();
+          return $('#myModal').find('video').show().attr('src', entry.url);
+        }
       }
     },
     cashTransactions: (function() {
@@ -1330,17 +1385,20 @@
       {
         title: "401k Update",
         time: (new Date()).getTime() - 10340000,
-        url: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
+        url: "https://www.youtube.com/embed/rDmZwsMGqRE?autoplay=1",
+        type: "youtube",
         duration: 1339000
       }, {
         title: "Portfolio Review",
         time: (new Date()).getTime() - 74120000,
-        url: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
+        url: "https://www.youtube.com/embed/rDmZwsMGqRE?autoplay=1",
+        type: "youtube",
         duration: 754000
       }, {
         title: "Portfolio Updates",
         time: (new Date()).getTime() - 202340000,
-        url: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
+        url: "https://www.youtube.com/embed/rDmZwsMGqRE?autoplay=1",
+        type: "youtube",
         duration: 552000
       }
     ],
@@ -1568,7 +1626,12 @@
       this.$('.modal-table').on('click', function(e) {
         if (e.toElement.localName !== 'video') {
           $('#myModal').modal('hide');
-          return $('#previewModalVideo')[0].pause();
+          if ($('#previewModalVideo')[0]) {
+            $('#previewModalVideo')[0].pause();
+          }
+          if ($('#myModal').find('iframe')[0]) {
+            return $('#myModal').find('iframe')[0].contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+          }
         }
       });
       $('#myModal').on('hidden.bs.modal', function() {
