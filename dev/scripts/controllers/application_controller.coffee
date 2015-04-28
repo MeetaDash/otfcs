@@ -1,5 +1,6 @@
 TBB.ApplicationController = Em.ObjectController.extend
   archiveVideoUrl: null
+  youtubeVideoUrl: null
   stocks: [
       {
         title: 'Dow'
@@ -22,6 +23,8 @@ TBB.ApplicationController = Em.ObjectController.extend
   ]
   actions:
     showArchiveEntry: (entry) ->
+      @set 'archiveVideoUrl', null
+      @set 'youtubeVideoUrl', null
       $('#myModal').modal('show')
       if entry.type == "youtube"
         url = null
@@ -29,12 +32,13 @@ TBB.ApplicationController = Em.ObjectController.extend
           url = (entry.url + '?enablejsapi=1')
         else
           url = (entry.url + '&enablejsapi=1')
-        $('#myModal').find('video').hide()
-        $('#myModal').find('iframe').show().attr('src', url)
+        @set 'youtubeVideoUrl', url
+        # $('#myModal').find('video').hide()
+        # $('#myModal').find('iframe').show().attr('src', url)
       else
         @set 'archiveVideoUrl', entry.url
-        $('#myModal').find('iframe').hide()
-        $('#myModal').find('video').show().attr('src', entry.url)
+        # $('#myModal').find('iframe').hide()
+        # $('#myModal').find('video').show().attr('src', entry.url)
         
   cashTransactions:(->
     currentCash = @get 'totalCash'

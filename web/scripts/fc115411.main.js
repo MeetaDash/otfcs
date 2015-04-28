@@ -1110,6 +1110,7 @@
 
   TBB.ApplicationController = Em.ObjectController.extend({
     archiveVideoUrl: null,
+    youtubeVideoUrl: null,
     stocks: [
       {
         title: 'Dow',
@@ -1131,6 +1132,8 @@
     actions: {
       showArchiveEntry: function(entry) {
         var url;
+        this.set('archiveVideoUrl', null);
+        this.set('youtubeVideoUrl', null);
         $('#myModal').modal('show');
         if (entry.type === "youtube") {
           url = null;
@@ -1139,12 +1142,9 @@
           } else {
             url = entry.url + '&enablejsapi=1';
           }
-          $('#myModal').find('video').hide();
-          return $('#myModal').find('iframe').show().attr('src', url);
+          return this.set('youtubeVideoUrl', url);
         } else {
-          this.set('archiveVideoUrl', entry.url);
-          $('#myModal').find('iframe').hide();
-          return $('#myModal').find('video').show().attr('src', entry.url);
+          return this.set('archiveVideoUrl', entry.url);
         }
       }
     },
